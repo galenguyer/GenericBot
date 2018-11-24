@@ -49,6 +49,8 @@ namespace GenericBot
         public static List<string> LockedFiles = new List<string>();
 
         public static int Disconnects = 0;
+        
+        public static Dictionary<string,string> ReplacementEmojis = new Dictionary<string, string>();
 
         static void Main(string[] args)
         {
@@ -57,6 +59,20 @@ namespace GenericBot
             {
                 Logger.LogGenericMessage($"Build {File.ReadAllText("version.txt").Trim()}");
                 BuildNumber = File.ReadAllText("version.txt").Trim();
+            }
+
+            if (File.Exists("emoji_replacements.json"))
+            {
+                try
+                {
+                    ReplacementEmojis =
+                        JsonConvert.DeserializeObject<Dictionary<string, string>>(
+                            File.ReadAllText("emoji_replacements.json"));
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Failed to parse emoji replacements.{Environment.NewLine}{e.Message}");
+                }
             }
             GlobalConfiguration = new GlobalConfiguration().Load();
             DBPassword = GlobalConfiguration.DatabasePassword;
