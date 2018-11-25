@@ -13,7 +13,7 @@ namespace GenericBot.CommandModules
             List<Command> ConfigCommands = new List<Command>();
 
             Command config = new Command("config");
-            config.Usage = "config <option> <value>`\nOptions are: `adminroles`, `moderatorroles`, `userroles`, `twitter`, `user`, `mutedroleid";
+            config.Usage = "config <option> <value>`\nOptions are: `adminroles`, `moderatorroles`, `userroles`, `twitter`, `user`, `mutedroleid`, `emojireplace`";
             config.Description = "Configure the bot's option";
             config.RequiredPermission = Command.PermissionLevels.Admin;
             config.ToExecute += async (client, msg, paramList) =>
@@ -551,6 +551,35 @@ namespace GenericBot.CommandModules
                 }
 
                 #endregion Antispam
+
+                #region EmojiReplace
+                else if (paramList[0].ToLower().Equals("emojireplace"))
+                {
+                    if (paramList.Count != 3) // emojireplace :firstItem: :secondItem:
+                    {
+                        await msg.ReplyAsync($"You need to specify an original and a replacement!");
+                    }
+                    else
+                    {
+                        var gc = GenericBot.GuildConfigs[msg.GetGuild().Id];
+                        if (gc.ReplacementEmojis.ContainsKey(paramList[1]))
+                        {
+                            if (paramList[1] == paramList[2])
+                            {
+                                gc.ReplacementEmojis.Remove(paramList[1]); //if same, remove.
+                            }
+                            else
+                            {
+                                gc.ReplacementEmojis[paramList[1]] = paramList[2];
+                            }
+                        }
+                        else
+                        {
+                            gc.ReplacementEmojis.Add(paramList[1],paramList[2]);
+                        }
+                    }
+                }
+                #endregion
 
                 else await msg.ReplyAsync($"Unknown property `{paramList[0]}`.");
 
