@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using Discord;
+using Discord.WebSocket;
 using GenericBot.Entities;
 
 namespace GenericBot.CommandModules
@@ -279,7 +280,7 @@ namespace GenericBot.CommandModules
             clap.Usage = "Put the clap emoji between each word";
             clap.ToExecute += async (client, msg, parameters) =>
             {
-                if (!GenericBot.ReplacementEmojis.TryGetValue(":clap:", out string clapValue))
+                if (!GenericBot.GuildConfigs[msg.GetGuild().Id].ReplacementEmojis.TryGetValue(":clap:", out var clapValue))
                 {
                     clapValue = ":clap:";
                 }

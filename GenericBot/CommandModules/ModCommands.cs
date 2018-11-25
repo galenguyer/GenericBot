@@ -572,6 +572,36 @@ namespace GenericBot.CommandModules
             };
 
             ModCommands.Add(archive);
+            
+            Command replace = new Command("replace");
+            replace.RequiredPermission = Command.PermissionLevels.Moderator;
+            replace.Description = "Replaces an emoji for a custom guild emoji";
+            replace.ToExecute += async (client, msg, parameters) =>
+            {
+                if (parameters.Count != 2)
+                {
+                    await msg.ReplyAsync($"You need to specify an original and a replacement!");
+                    return;
+                }
+                var gc = GenericBot.GuildConfigs[msg.GetGuild().Id];
+                if (gc.ReplacementEmojis.ContainsKey(parameters[0]))
+                {
+                    if (parameters[0] == parameters[1])
+                    {
+                        gc.ReplacementEmojis.Remove(parameters[0]); //if same, remove.
+                    }
+                    else
+                    {
+                        gc.ReplacementEmojis[parameters[0]] = parameters[1];
+                    }
+                }
+                else
+                {
+                    gc.ReplacementEmojis.Add(parameters[0],parameters[1]);
+                }
+            };
+
+            ModCommands.Add(replace);
 
             return ModCommands;
         }

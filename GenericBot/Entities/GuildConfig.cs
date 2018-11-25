@@ -47,6 +47,7 @@ namespace GenericBot.Entities
         public List<ulong> ProbablyMutedUsers = new List<ulong>();
         public ulong MutedRoleId = 0;
         public List<GenericBan> Bans = new List<GenericBan>();
+        public Dictionary<string, string> ReplacementEmojis;
 
         public Dictionary<ulong, Discord.OverwritePermissions> ChannelOverrideDefaults = new Dictionary<ulong, Discord.OverwritePermissions>();
 
@@ -59,6 +60,8 @@ namespace GenericBot.Entities
             AutoRoleIds = new List<ulong>();
             CustomCommands = new List<CustomCommand>();
             CustomAliases = new List<CustomAlias>();
+            ReplacementEmojis = new Dictionary<string, string>();
+            
             Bans = new List<GenericBan>();
 
             Prefix = "";
