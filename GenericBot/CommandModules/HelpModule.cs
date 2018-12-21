@@ -16,6 +16,7 @@ namespace GenericBot.CommandModules
             help.Aliases = new List<string> { "halp" };
             help.ToExecute += async (client, msg, paramList) =>
             {
+                var guildConfig = GenericBot.GuildConfigs[msg.GetGuild().Id];
                 string commands = "";
                 var guildCustomCommands = GenericBot.GuildConfigs[msg.GetGuild().Id].CustomCommands;
                 string[] levels = { "User Commands", "Moderator Commands", "Admin Commands", "Guild Owner Commands", "Global Admin Commands", "Bot Owner Commands" };
@@ -28,6 +29,7 @@ namespace GenericBot.CommandModules
                         commands += $"\n{levels[i]}: ";
                         commands += GenericBot.Commands
                             .Where(c => c.RequiredPermission == GetPermFromInt(i))
+                            .Where(c => c.Name == "g" ? (guildConfig.Giveaway != null && guildConfig.Giveaway.Open) : true)
                             .OrderBy(c => c.RequiredPermission)
                             .ThenBy(c => c.Name)
                             .Select(c => $"`{c.Name}`")
@@ -61,6 +63,7 @@ namespace GenericBot.CommandModules
                             commands += GenericBot.Commands
                                 .Where(c => c.Name.ToLower().Contains(param) || c.Aliases.Any(a => a.ToLower().Contains(param)))
                                 .Where(c => c.RequiredPermission == GetPermFromInt(i))
+                                .Where(c => c.Name == "g" ? (guildConfig.Giveaway != null && guildConfig.Giveaway.Open) : true)
                                 .OrderBy(c => c.RequiredPermission)
                                 .ThenBy(c => c.Name)
                                 .Select(c => $"`{c.Name}`")
@@ -81,6 +84,7 @@ namespace GenericBot.CommandModules
                         var cmds = GenericBot.Commands
                             .Where(c => c.RequiredPermission <= help.GetPermissions(msg.Author, msg.GetGuild().Id))
                             .Where(c => c.Name.ToLower().Contains(param) || c.Aliases.Any(a => a.ToLower().Contains(param)))
+                            .Where(c => c.Name == "g" ? (guildConfig.Giveaway != null && guildConfig.Giveaway.Open) : true)
                             .OrderBy(c => c.RequiredPermission)
                             .ThenBy(c => c.Name);
                         var ccmds = guildCustomCommands.Where(c => c.Name.ToLower().Contains(param) || c.Aliases.Any(a => a.ToLower().Contains(param)))
