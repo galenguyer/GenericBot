@@ -290,12 +290,28 @@ namespace GenericBot.Entities
                     MostUsedCommandsOverall += $"    {cmd.Key} (`{cmd.Value}` uses)\n";
                 }
 
+                string mostActiveUsersToday = "";
+                var mostActiveIdToday = GetTopToday(users);
+                foreach (var user in mostActiveIdToday)
+                {
+                    if (msg.GetGuild().Users.HasElement(u => u.Id == user.Id, out var us))
+                    {
+                        mostActiveUsersToday += $"    {us.GetDisplayName()} (`{us}`) " +
+                        $"(`{MessageCountTodayByUser(user)}` messages)\n";
+                    }
+                    else
+                    {
+                        mostActiveUsersToday += $"    Unknown User (`{user.Id}`) " +
+                        $"(`{MessageCountTodayByUser(user)}` messages)\n";
+                    }
+                }
 
                 string info = $"Analytics for **{msg.GetGuild().Name}**\n\n";
                 info += $"All Messages Logged: `{days.Sum(d => d.MessageCount)}`\n";
                 info += $"All Commands Logged: `{commands.Sum(c => c.Value)}`\n";
                 info += $"Most Active Users Overall: \n{mostActiveUsersOverall}";
                 info += $"Most Used Commands Overall: \n{MostUsedCommandsOverall}";
+                info += $"Most Active Users Today: \n{mostActiveUsersToday}";
 
                 await msg.ReplyAsync(info);
             };
@@ -303,6 +319,28 @@ namespace GenericBot.Entities
             cmds.Add(analytics);
 
             return cmds;
+        }
+        public List<GuildMessageStats.StatsUser> GetTopToday(IEnumerable<GuildMessageStats.StatsUser> users)
+        {
+            var now = DateTimeOffset.UtcNow;
+            var mostActiveIdToday = users.OrderByDescending(
+                u => u.Years.Where(y => y.Year == now.Year).Sum(
+                    y => y.Months.Where(m => m.Month == now.Month).Sum(
+                        m => m.Days.Where(d => d.Day == now.Day).Sum(
+                            d => d.MessageCount)))).Take(3);
+
+            return mostActiveIdToday.ToList();
+        }
+
+        public int MessageCountTodayByUser(GuildMessageStats.StatsUser user)
+        {
+            var now = DateTimeOffset.UtcNow;
+            var mostActiveIdToday = user
+                .Years.First(y => y.Year == now.Year)
+                .Months.First(m => m.Month == now.Month)
+                .Days.First(d => d.Day == now.Day).MessageCount;
+
+            return mostActiveIdToday;
         }
     }
 }

@@ -20,62 +20,170 @@ namespace GenericBot.CommandModules
         {
             List<Command> SocialCommands = new List<Command>();
 
-            Command time = new Command("time");
-            time.Description = "Get the current time with different timezone support";
-            time.ToExecute += async (client, msg, parameters) =>
+            Command star = new Command("star");
+            star.ToExecute += async (client, msg, parameters) =>
             {
+                string filename = "";
                 if (parameters.Empty())
                 {
-                    var currTime = DateTimeOffset.UtcNow.TimeOfDay;
-
-                    bool pm = currTime.Hours >= 12;
-
-                    int hour = currTime.Hours;
-                    string minutes = "00" + currTime.Minutes;
-                    if (pm)
+                    var user = msg.Author;
+                    using (WebClient webClient = new WebClient())
                     {
-                        hour = currTime.Hours - 12;
+                        await webClient.DownloadFileTaskAsync(new Uri(user.GetAvatarUrl().Replace("size=128", "size=512")),
+                            $"files/img/{user.AvatarId}.png");
                     }
-
-                    while (minutes.Length > 2)
-                    {
-                        minutes = minutes.Substring(1, 3);
-                    }
-
-
-                    string sTime = $"{hour}:{("00" + currTime.Minutes)} ";
-                    if (pm) sTime += "PM";
-                    else sTime += "AM";
-                    await msg.ReplyAsync($"Current GMT time is `{sTime}`");
-                    return;
+                    filename = $"files/img/{user.AvatarId}.png";
                 }
-                try
+                else if (Uri.IsWellFormedUriString(parameters[0], UriKind.RelativeOrAbsolute) &&
+                                         (parameters[0].EndsWith(".png") || parameters[0].EndsWith(".jpg") ||
+                                          parameters[0].EndsWith("jpeg") || parameters[0].EndsWith(".gif")))
                 {
-                    Dictionary<string, string> _timeZones = new Dictionary<string, string>() { { "ACDT", "+10:30" }, { "ACST", "+09:30" }, { "ADT", "-03:00" }, { "AEDT", "+11:00" }, { "AEST", "+10:00" }, { "AHDT", "-09:00" }, { "AHST", "-10:00" }, { "AST", "-04:00" }, { "AT", "-02:00" }, { "AWDT", "+09:00" }, { "AWST", "+08:00" }, { "BAT", "+03:00" }, { "BDST", "+02:00" }, { "BET", "-11:00" }, { "BST", "01:00" }, { "BT", "+03:00" }, { "BZT2", "-03:00" }, { "CADT", "+10:30" }, { "CAST", "+09:30" }, { "CAT", "-10:00" }, { "CCT", "+08:00" }, { "CDT", "-05:00" }, { "CED", "+02:00" }, { "CET", "+01:00" }, { "CEST", "+02:00" }, { "CST", "-06:00" }, { "EAST", "+10:00" }, { "EDT", "-04:00" }, { "EED", "+03:00" }, { "EET", "+02:00" }, { "EEST", "+03:00" }, { "EST", "-05:00" }, { "FST", "+02:00" }, { "FWT", "+01:00" }, { "GMT", "+00:00" }, { "GST", "+10:00" }, { "HDT", "-09:00" }, { "HST", "-10:00" }, { "IDLE", "+12:00" }, { "IDLW", "-12:00" }, { "IST", "+05:30" }, { "IT", "+03:30" }, { "JST", "+09:00" }, { "JT", "+07:00" }, { "MDT", "-06:00" }, { "MED", "+02:00" }, { "MET", "+01:00" }, { "MEST", "+02:00" }, { "MEWT", "+01:00" }, { "MST", "-07:00" }, { "MT", "+08:00" }, { "NDT", "-02:30" }, { "NFT", "-03:30" }, { "NT", "-11:00" }, { "NST", "+06:30" }, { "NZ", "+11:00" }, { "NZST", "+12:00" }, { "NZDT", "+13:00" }, { "NZT", "+12:00" }, { "PDT", "-07:00" }, { "PST", "-08:00" }, { "ROK", "+09:00" }, { "SAD", "+10:00" }, { "SAST", "+09:00" }, { "SAT", "+09:00" }, { "SDT", "+10:00" }, { "SST", "+02:00" }, { "SWT", "+01:00" }, { "USZ3", "+04:00" }, { "USZ4", "+05:00" }, { "USZ5", "+06:00" }, { "USZ6", "+07:00" }, { "UT", "-00:00" }, { "UTC", "-00:00" }, { "UZ10", "+11:00" }, { "WAT", "-01:00" }, { "WET", "-00:00" }, { "WST", "+08:00" }, { "YDT", "-08:00" }, { "YST", "-09:00" }, { "ZP4", "+04:00" }, { "ZP5", "+05:00" }, { "ZP6", "+06:00" } };
-                    var currTime = DateTimeOffset.UtcNow.TimeOfDay + TimeSpan.Parse(_timeZones[parameters[0].ToUpper()]);
-
-                    bool pm = currTime.Hours >= 12;
-
-                    int hour = currTime.Hours;
-                    if (pm)
+                    filename = $"files/img/{msg.Id}.{parameters.reJoin().Split('.').Last()}";
+                    using (WebClient webclient = new WebClient())
                     {
-                        hour = currTime.Hours - 12;
+                        await webclient.DownloadFileTaskAsync(new Uri(parameters.reJoin()), filename);
                     }
-
-                    string sTime = $"{hour}:{currTime.Minutes} ";
-                    if (pm) sTime += "PM";
-                    else sTime += "AM";
-
-                    await msg.ReplyAsync($"Current {parameters[0].ToUpper()} time is `{sTime}`");
                 }
-                catch (Exception ex)
+                else if (msg.GetMentionedUsers().Any())
                 {
-                    await msg.ReplyAsync($"An error occured: `{ex.Message}`");
-                    if (msg.Author.Id == 169918990313848832) await msg.ReplyAsync($"```\n{ex.StackTrace}\n```");
+                    var user = msg.GetMentionedUsers().First();
+                    using (WebClient webClient = new WebClient())
+                    {
+                        await webClient.DownloadFileTaskAsync(new Uri(user.GetAvatarUrl().Replace("size=128", "size=512")),
+                            $"files/img/{user.AvatarId}.png");
+                    }
+                    filename = $"files/img/{user.AvatarId}.png";
+                }
+
+                {
+                    int targetWidth = 1242;
+                    int targetHeight = 764; //height and width of the finished image
+                    Image baseImage = Image.FromFile("files/img/staroranangel.png");
+                    Image avatar = Image.FromFile(filename);
+
+                    //be sure to use a pixelformat that supports transparency
+                    using (var bitmap = new Bitmap(targetWidth, targetHeight, PixelFormat.Format32bppArgb))
+                    {
+                        using (var canvas = Graphics.FromImage(bitmap))
+                        {
+                            //this ensures that the backgroundcolor is transparent
+                            canvas.Clear(Color.Transparent);
+
+                            //this paints the frontimage with a offset at the given coordinates
+                            canvas.DrawImage(avatar, 283, 228, 118 * avatar.Width / avatar.Height, 118);
+                            canvas.DrawImage(avatar, 746, 250, 364 * avatar.Width / avatar.Height, 346);
+
+                            //this selects the entire backimage and and paints
+                            //it on the new image in the same size, so its not distorted.
+                            canvas.DrawImage(baseImage, 0, 0, targetWidth, targetHeight);
+                            canvas.Save();
+                        }
+
+                        bitmap.Save($"files/img/star_{msg.Id}.png", System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    await Task.Delay(100);
+                    await msg.Channel.SendFileAsync($"files/img/star_{msg.Id}.png");
+                    while (true)
+                    {
+                        try
+                        {
+                            baseImage.Dispose();
+                            avatar.Dispose();
+                            File.Delete(filename);
+                            File.Delete($"files/img/star_{msg.Id}.png");
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
                 }
             };
 
-            SocialCommands.Add(time);
+            SocialCommands.Add(star);
+
+            Command respects = new Command("respects");
+            respects.ToExecute += async (client, msg, parameters) =>
+            {
+                string filename = "";
+                if (parameters.Empty())
+                {
+                    var user = msg.Author;
+                    using (WebClient webClient = new WebClient())
+                    {
+                        await webClient.DownloadFileTaskAsync(new Uri(user.GetAvatarUrl().Replace("size=128", "size=512")),
+                            $"files/img/{user.AvatarId}.png");
+                    }
+                    filename = $"files/img/{user.AvatarId}.png";
+                }
+                else if (Uri.IsWellFormedUriString(parameters[0], UriKind.RelativeOrAbsolute) &&
+                                         (parameters[0].EndsWith(".png") || parameters[0].EndsWith(".jpg") ||
+                                          parameters[0].EndsWith("jpeg") || parameters[0].EndsWith(".gif")))
+                {
+                    filename = $"files/img/{msg.Id}.{parameters.reJoin().Split('.').Last()}";
+                    using (WebClient webclient = new WebClient())
+                    {
+                        await webclient.DownloadFileTaskAsync(new Uri(parameters.reJoin()), filename);
+                    }
+                }
+                else if (msg.GetMentionedUsers().Any())
+                {
+                    var user = msg.GetMentionedUsers().First();
+                    using (WebClient webClient = new WebClient())
+                    {
+                        await webClient.DownloadFileTaskAsync(new Uri(user.GetAvatarUrl().Replace("size=128", "size=512")),
+                            $"files/img/{user.AvatarId}.png");
+                    }
+                    filename = $"files/img/{user.AvatarId}.png";
+                }
+
+                {
+                    int targetWidth = 1920;
+                    int targetHeight = 1080; //height and width of the finished image
+                    Image baseImage = Image.FromFile("files/img/respects.png");
+                    Image avatar = Image.FromFile(filename);
+
+                    //be sure to use a pixelformat that supports transparency
+                    using (var bitmap = new Bitmap(targetWidth, targetHeight, PixelFormat.Format32bppArgb))
+                    {
+                        using (var canvas = Graphics.FromImage(bitmap))
+                        {
+                            //this ensures that the backgroundcolor is transparent
+                            canvas.Clear(Color.Transparent);
+
+                            //this paints the frontimage with a offset at the given coordinates
+                            canvas.DrawImage(avatar, 537, 130, 235, 235);
+
+                            //this selects the entire backimage and and paints
+                            //it on the new image in the same size, so its not distorted.
+                            canvas.DrawImage(baseImage, 0, 0, targetWidth, targetHeight);
+                            canvas.Save();
+                        }
+
+                        bitmap.Save($"files/img/respects_{msg.Id}.png", System.Drawing.Imaging.ImageFormat.Png);
+                    }
+                    await Task.Delay(100);
+                    await msg.Channel.SendFileAsync($"files/img/respects_{msg.Id}.png");
+                    while (true)
+                    {
+                        try
+                        {
+                            baseImage.Dispose();
+                            avatar.Dispose();
+                            File.Delete(filename);
+                            File.Delete($"files/img/respects_{msg.Id}.png");
+                            break;
+                        }
+                        catch (Exception ex)
+                        {
+
+                        }
+                    }
+                }
+            };
+
+            SocialCommands.Add(respects);
 
             Command jeff = new Command("jeff");
             jeff.ToExecute += async (client, msg, parameters) =>
