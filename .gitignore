@@ -305,3 +305,7 @@ $RECYCLE.BIN/
 # Custom
 files*
 *.bat
+
+# vs code
+*/.vscode/
+*/nuget.config

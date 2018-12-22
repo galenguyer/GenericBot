@@ -67,7 +67,7 @@ namespace GenericBot
             }
             GlobalConfiguration = new GlobalConfiguration().Load();
             DBPassword = GlobalConfiguration.DatabasePassword;
-            GlobalDatabase = new LiteDB.LiteDatabase(@"Filename=files/guildDatabase.db; Password=" + DBPassword);
+            GlobalDatabase = new LiteDB.LiteDatabase(@"Mode=Exclusive; Filename=files/guildDatabase.db; Password=" + DBPassword);
             GuildConfigs = new Dictionary<ulong, GuildConfig>();
             TweetStore = JsonConvert.DeserializeObject<List<GenericTweet>>(File.ReadAllText("files/tweetStore.json"));
             Twitter.AuthenticateWith("924464831813398529-pi51h6UB3iitJB2UQwGrHukYjD1Pz7F", "3R0vFFQLCGe9vuGvn00Avduq1K8NHjmRBUFJVuo9nRYXJ");

@@ -406,6 +406,81 @@ namespace GenericBot.CommandModules
 
             RoleCommands.Add(roleStore);
 
+            /** toby was here <3 */
+
+            Command youare = new Command("youare");
+            youare.Description = "Give a user a role";
+            youare.Usage = "youare <user id> <role name>";
+            youare.Aliases = new List<string> { "give" };
+            youare.RequiredPermission = Command.PermissionLevels.Moderator;
+            
+            youare.ToExecute += async (client, msg, paramList) =>
+            {
+                if(paramList.Count() > 1)
+                {
+                    ulong userId;
+
+                    if(msg.MentionedUsers.Any())
+                    {
+                        userId = msg.MentionedUsers.First().Id;
+                    }
+                    else
+                    {
+                        try
+                        {
+                            userId = ulong.Parse(paramList[0]);
+                        }
+                        catch(Exception ex)
+                        {
+                            await msg.ReplyAsync("Please provide a user ID or an @user");
+                            return;
+                        }
+                    }
+
+                    string roleName = paramList[1];
+                    var roles = msg.GetGuild().Roles.Where(r => r.Name.ToLower().Contains(roleName.ToLower().Trim()))
+                        .Where(r => GenericBot.GuildConfigs[msg.GetGuild().Id].UserRoleIds.Contains(r.Id));
+
+                    if(roles.Count() > 0)
+                    {
+                        try
+                        {
+                            var role = roles.Any(r => r.Name.ToLower() == roleName.ToLower()) ? roles.First(r => r.Name.ToLower() == roleName.ToLower()) : roles.First();
+                            
+                            if (msg.GetGuild().GetUser(userId).Roles.Any(r => r.Id == roles.First().Id))
+                            {
+                                await msg.ReplyAsync(msg.GetGuild().GetUser(userId).GetDisplayName() + " already has role " + roleName);
+                                return;
+                            }
+                            else
+                            {
+                                await msg.GetGuild().GetUser(userId).AddRoleAsync(role);
+                                await msg.ReplyAsync($"{msg.GetGuild().GetUser(userId).GetDisplayName()} has been assigned role {role.Name}");
+                                return;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            await GenericBot.Logger.LogErrorMessage(e.Message);
+                            await msg.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"I might not have permission to do that").WithColor(new Color(0xFF0000)).Build());
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        await msg.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"Could not find any user roles matching `{roleName}`").WithColor(new Color(0xFFFF00)).Build());
+                        return;
+                    }
+                }
+                else
+                {
+                    await msg.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"Please provide a user ID/@user and a role to assign them").WithColor(new Color(0xFF0000)).Build());
+                    return;
+                }
+            };
+
+            RoleCommands.Add(youare);
+
             return RoleCommands;
         }
     }
