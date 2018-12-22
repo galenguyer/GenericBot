@@ -1,0 +1,12 @@
+{
+  "Token": "Your token here",
+  "DatabasePassword": "Your password here",
+  "DefaultPrefix": "<",
+  "DefaultExecuteEdits": true,
+  "OwnerId": 0,
+  "GlobalAdminIds": [
+  ],
+  "PlayingStatus": "",
+  "BlacklistedIds": [
+  ],
+}

@@ -305,6 +305,7 @@ $RECYCLE.BIN/
 # Custom
 files*
 *.bat
+*.bat
 
 # vs code
 */.vscode/

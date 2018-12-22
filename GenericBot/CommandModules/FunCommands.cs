@@ -201,6 +201,11 @@ namespace GenericBot.CommandModules
             addQuote.ToExecute += async (client, msg, parameters) =>
             {
                 var dbGuild = new DBGuild(msg.GetGuild().Id);
+                if(string.IsNullOrEmpty(parameters.reJoin()))
+                {
+                    await msg.ReplyAsync("You can't add an empty quote");
+                    return;
+                }
                 var q = dbGuild.AddQuote(parameters.reJoin());
                 dbGuild.Save();
                 await msg.ReplyAsync($"Added {q.ToString()}");

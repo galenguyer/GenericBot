@@ -116,7 +116,7 @@ namespace GenericBot
                                 }
                                 if (givenUsers.Any())
                                 {
-                                    message.ReplyAsync($"{givenUsers.Select(us => $"**{(us as SocketGuildUser).GetDisplayName()}**").ToList().SumAnd()} recieved a {GenericBot.GuildConfigs[message.GetGuild().Id].PointsName} of thanks from **{(message.Author as SocketGuildUser).GetDisplayName()}**");
+                                    message.ReplyAsync($"{givenUsers.Select(us => $"**{(us as SocketGuildUser).GetDisplayName()}**").ToList().SumAnd()} received a {GenericBot.GuildConfigs[message.GetGuild().Id].PointsName} of thanks from **{(message.Author as SocketGuildUser).GetDisplayName()}**");
                                     db.GetUser(message.Author.Id).LastThanks = DateTimeOffset.UtcNow;
                                 }
                                 else message.ReplyAsync("You can't give yourself a point!");

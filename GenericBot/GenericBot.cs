@@ -131,7 +131,7 @@ namespace GenericBot
             foreach (var shard in DiscordClient.Shards)
             {
                 shard.Ready += OnReady;
-                shard.SetGameAsync(GlobalConfiguration.PlayingStatus).FireAndForget();
+                shard.SetGameAsync($"v. {BuildNumber}").FireAndForget();
             }
 
             DiscordClient.MessageReceived += MessageEventHandler.MessageRecieved;

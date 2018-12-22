@@ -138,7 +138,7 @@ namespace GenericBot.Entities
                     else
                     {
                         var ql = Quotes.Where(q => q.Active)
-                            .Where(q => q.Content.ToLower().Contains(identifer.ToLower()));
+                            .Where(q => !string.IsNullOrEmpty(q.Content.Trim())).Where(q => q.Content.ToLower().Contains(identifer.ToLower()));
                         if (ql.Count() == 0)
                         {
                             return new Quote { Content = "Could not find quote", Id = -1 };
