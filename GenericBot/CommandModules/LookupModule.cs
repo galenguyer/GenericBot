@@ -154,7 +154,7 @@ namespace GenericBot.CommandModules
                         eb.AddField($"Past nicknames ({dbUser.Nicknames.Count})", nicks.Truncate(1024, $"\u2026 (`{Core.GetPrefix(context)}nicks {dbUser.Id}`)"));
                     
                     if ((dbUser.Warnings?.Count ?? 0) > 0)
-                        eb.AddField($"Warnings ({dbUser.Warnings})", warnings.Truncate(1024, $"\u2026 (`{Core.GetPrefix(context)}warns {dbUser.Id}`)"));
+                        eb.AddField($"Warnings ({dbUser.Warnings.Count})", warnings.Truncate(1024, $"\u2026 (`{Core.GetPrefix(context)}warns {dbUser.Id}`)"));
                     
                     eb.WithDescription(description);
 
