@@ -59,7 +59,7 @@ namespace GenericBot.CommandModules
                 message = message.Trim(' ', ',', '\n');
                 //message += $"\n You can also use `{prefix}rolestore save` to backup your assigned roles";
 
-                foreach (var str in message.SplitSafe())
+                foreach (var str in message.MessageSplit())
                 {
                     await context.Message.ReplyAsync(str);
                 }
@@ -224,7 +224,7 @@ namespace GenericBot.CommandModules
                     message += $"{role.Name} (`{role.Id}`)\n";
                 }
 
-                foreach (var str in message.SplitSafe())
+                foreach (var str in message.MessageSplit())
                 {
                     await context.Message.ReplyAsync(str);
                 }
@@ -254,7 +254,7 @@ namespace GenericBot.CommandModules
                     }
                 }
 
-                foreach (var str in result.SplitSafe('\n'))
+                foreach (var str in result.MessageSplit('\n'))
                 {
                     await context.Message.ReplyAsync(str);
                 }

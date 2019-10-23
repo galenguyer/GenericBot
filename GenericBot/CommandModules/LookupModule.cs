@@ -77,7 +77,7 @@ namespace GenericBot.CommandModules
                         $"Found `{foundUsers.Count}` users. Their first stored usernames are:\n{foundUsers.Select(u => $"{u.Usernames.First().Escape()} (`{u.Id}`)").ToList().SumAnd()}" +
                         $"\nTry using more precise search parameters";
 
-                    foreach (var str in info.SplitSafe(','))
+                    foreach (var str in info.MessageSplit(','))
                     {
                         await context.Message.ReplyAsync(str.TrimStart(','));
                     }
@@ -184,7 +184,7 @@ namespace GenericBot.CommandModules
                 }
                 
                 var usernames = user.Usernames.Distinct().Select(n => $"`{n.Replace("`", "'")}`").ToList().SumAnd();
-                foreach (var s in $"<@!{user.Id}> has had the following nicknames: {usernames}".SplitSafe()) 
+                foreach (var s in $"<@!{user.Id}> has had the following nicknames: {usernames}".MessageSplit()) 
                     await context.Message.ReplyAsync(s);
             };
             commands.Add(names);
@@ -210,7 +210,7 @@ namespace GenericBot.CommandModules
                 }
                 
                 var nicknames = user.Nicknames.Distinct().Select(n => $"`{n.Replace("`", "'")}`").ToList().SumAnd();
-                foreach (var s in $"<@!{user.Id}> has had the following nicknames: {nicknames}".SplitSafe()) 
+                foreach (var s in $"<@!{user.Id}> has had the following nicknames: {nicknames}".MessageSplit(',')) 
                     await context.Message.ReplyAsync(s);
             };
             commands.Add(nicksCmd);

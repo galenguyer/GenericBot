@@ -37,7 +37,7 @@ namespace GenericBot.CommandModules
                     {
                         rawResponse += $"`{cmd.Name}`: {cmd.Response.SafeSubstring(100)}\nDelete: `{cmd.Delete}`\n\n";
                     }
-                    foreach (var resp in rawResponse.SplitSafe('\n'))
+                    foreach (var resp in rawResponse.MessageSplit('\n'))
                     {
                         await context.Message.ReplyAsync(resp);
                     }

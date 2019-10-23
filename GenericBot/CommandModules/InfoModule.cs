@@ -207,7 +207,7 @@ namespace GenericBot.CommandModules
                     return;
                 }
 
-                foreach (var str in commandList.SplitSafe())
+                foreach (var str in commandList.MessageSplit())
                 {
                     await context.Message.ReplyAsync(str);
                 }

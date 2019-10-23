@@ -148,27 +148,40 @@ namespace GenericBot
             return list[new Random().Next(0, list.Count - 1)];
         }
 
-        public static List<string> SplitSafe(this string input, char spl = ' ')
+        /**
+         * Splits a long message to smaller messages of a given maximum length each on a specific character.
+         *
+         * This function will ensure the message splits *only* happen on the given split character, which can be used
+         * to prevent breaking markup across split points by passing a delimiter known to be outside any markup.
+         */
+        public static List<string> MessageSplit(this string input, char delimiter = ' ', int maxLineLength = 1800)
         {
             List<string> output = new List<string>();
-            var strings = input.Split(spl);
+            var stringComponents = input.Split(delimiter);
 
-            string temp = "";
-            foreach (var s in strings)
+            var accumulator = "";
+            for (var i = 0; i < stringComponents.Length; i++)
             {
-                if (temp.Length + s.Length < 1800)
+                var currentSubstring = stringComponents[i];
+                
+                if (accumulator.Length + currentSubstring.Length < maxLineLength)
                 {
-                    temp += spl + s;
+                    accumulator += currentSubstring;
+                    
+                    // If this isn't the last substring, we add a delimiter.
+                    if (i < stringComponents.Length - 1) accumulator += delimiter;
                 }
                 else
                 {
-                    output.Add(temp);
-                    temp = s;
+                    // Finish off the accumulator we have, and start a new one containing the current substring
+                    output.Add(accumulator);
+                    accumulator = currentSubstring;
                 }
             }
-
-            output.Add(temp);
-
+            
+            // We're done, add whatever's left in the accumulator to the last line (or in single-line cases, all our
+            // input text), and return it.
+            output.Add(accumulator);
             return output;
         }
 
