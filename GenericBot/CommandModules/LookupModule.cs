@@ -184,7 +184,7 @@ namespace GenericBot.CommandModules
                 }
                 
                 var usernames = user.Usernames.Distinct().Select(n => $"`{n.Replace("`", "'")}`").ToList().SumAnd();
-                foreach (var s in $"<@!{user.Id}> has had the following nicknames: {usernames}".MessageSplit()) 
+                foreach (var s in $"<@!{user.Id}> has had the following nicknames: {usernames}".MessageSplit(',')) 
                     await context.Message.ReplyAsync(s);
             };
             commands.Add(names);
