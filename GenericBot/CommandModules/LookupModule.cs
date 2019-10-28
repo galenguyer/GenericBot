@@ -214,6 +214,36 @@ namespace GenericBot.CommandModules
                     await context.Message.ReplyAsync(s);
             };
             commands.Add(nicksCmd);
+            
+            Command warnsCmd = new Command("warns");
+            warnsCmd.RequiredPermission = Command.PermissionLevels.Moderator;
+            warnsCmd.Usage = "warns <id>";
+            warnsCmd.Description = "Shows the full list of warnings logged for a given user";
+            warnsCmd.ToExecute += async (context) =>
+            {
+                if (!ulong.TryParse(context.ParameterString, out var id))
+                {
+                    await context.Message.ReplyAsync($"You must pass a plain user ID.");
+                    return;
+                }
+
+                var user = Core.GetUserFromGuild(id, context.Guild.Id);
+                if (user == null)
+                {
+                    await context.Message.ReplyAsync($"User not found in database for this guild.");
+                    return;
+                }
+
+                var str = $"Warnings for <@!{user.Id}>\n\n";
+                foreach (var warning in user.Warnings)
+                {
+                    str += warning + "\n";
+                }
+
+                foreach (var s in str.MessageSplit('\n')) 
+                    await context.Message.ReplyAsync(s);
+            };
+            commands.Add(warnsCmd);
 
             Command updateDb = new Command("updatedb");
             updateDb.RequiredPermission = Command.PermissionLevels.GlobalAdmin;
