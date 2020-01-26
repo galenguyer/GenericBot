@@ -41,6 +41,15 @@ namespace GenericBot.CommandModules
                 await context.Message.ReplyAsync(context.Parameters.Rejoin(" :clap: ") + " :clap:");
             };
             commands.Add(clap);
+            
+            // i tried to add a kanye command but i'm a clueless bitch https://kanye.rest/
+            //Command kanye = new Command("kanye");
+            //kanye.WorksInDms = true;
+            //kanye.Usage = "Posts a Kanye West quote";
+            //kanye.ToExecute += async (context) =>
+            //{
+                //get https://api.kanye.rest/
+              //}
 
             return commands;
         }
