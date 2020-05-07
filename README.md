@@ -1,5 +1,6 @@
 # GenericBot: An All-Purpose Almost-Decent Bot
 [![Build status](https://mastrchef.visualstudio.com/GenericBot/_apis/build/status/GenericBot-ASP.NET%20Core-CI)](https://mastrchef.visualstudio.com/GenericBot/_build/latest?definitionId=1)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgalenguyer%2FGenericBot.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fgalenguyer%2FGenericBot?ref=badge_shield)
 
 GenericBot aims to provide an almost full featured moderation and fun box experience in one convenient package
 
@@ -36,3 +37,7 @@ In late September, I took it upon myself to completely re-write GenericBot. I've
 
 ##### Things I've removed
 - Points have been removed, at least for the time being. The code around them was very messy and doesn't work with the new structure. 
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fgalenguyer%2FGenericBot.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fgalenguyer%2FGenericBot?ref=badge_large)
