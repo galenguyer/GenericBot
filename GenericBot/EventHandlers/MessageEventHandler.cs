@@ -94,8 +94,7 @@ namespace GenericBot
             {
                 if (parameterMessage.Author.Id == Core.GetOwnerId())
                 {
-                    parameterMessage.ReplyAsync("```\n" + $"{ex.Message}\n{ex.StackTrace}".SafeSubstring(1000) +
-                                                      "\n```");
+                    parameterMessage.ReplyAsync("```\n" + $"{ex.Message}\n{ex.StackTrace}".SafeSubstring(1000) + "\n```");
                 }
                 Core.Logger.LogErrorMessage(ex, new Command("t").ParseMessage(parameterMessage));
             }
@@ -109,7 +108,7 @@ namespace GenericBot
 
         public static async Task HandleEditedCommand(Cacheable<IMessage, ulong> arg1, SocketMessage arg2, ISocketMessageChannel arg3)
         {
-            if (arg1.Value.Content == arg2.Content) return;
+            if (!arg1.HasValue || arg1.Value.Content == arg2.Content) return;
 
             if (Core.GlobalConfig.DefaultExecuteEdits)
             {
