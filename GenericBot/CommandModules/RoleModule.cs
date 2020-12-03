@@ -89,7 +89,7 @@ namespace GenericBot.CommandModules
                     messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription("Please select a role to join").WithColor(new Color(0xFFFF00)).Build()).Result);
                 }
 
-                foreach (var roleName in context.ParameterString.Trim(',', ' ').Split(','))
+                foreach (var roleName in context.ParameterString.Trim(',', ' ').Split(',').Select(r => r.Trim('"')))
                 {
                     if (string.IsNullOrWhiteSpace(roleName))
                         continue;
@@ -165,7 +165,7 @@ namespace GenericBot.CommandModules
                     messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription("Please select a role to remove").WithColor(new Color(0xFFFF00)).Build()).Result);
                 }
 
-                foreach (var roleName in context.ParameterString.Trim(',', ' ').Split(','))
+                foreach (var roleName in context.ParameterString.Trim(',', ' ').Split(',').Select(r => r.Trim('"')))
                 {
                     if (string.IsNullOrWhiteSpace(roleName))
                         continue;
