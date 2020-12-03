@@ -166,14 +166,14 @@ namespace GenericBot.CommandModules
                                         {
                                             string groupName = _guildConfig.UserRoles.First(rg => rg.Key.ToLower() == context.Parameters.Rejoin().ToLower()).Key;
                                             _guildConfig.UserRoles[groupName].Add(id);
-
+                                            await context.Message.ReplyAsync($"Added {context.Guild.Roles.FirstOrDefault(r => r.Id == id).Name} to User Roles in group {_guildConfig.UserRoles.First(rg => rg.Key.ToLower() == context.Parameters.Rejoin().ToLower()).Key}");
                                         }
                                         else
                                         {
                                             _guildConfig.UserRoles.Add(context.Parameters.Rejoin(), new List<ulong>());
                                             _guildConfig.UserRoles[context.Parameters.Rejoin()].Add(id);
+                                            await context.Message.ReplyAsync($"Added {context.Guild.Roles.FirstOrDefault(r => r.Id == id).Name} to User Roles in new group {_guildConfig.UserRoles.First(rg => rg.Key.ToLower() == context.Parameters.Rejoin().ToLower()).Key}");
                                         }
-                                        await context.Message.ReplyAsync($"Added {context.Guild.Roles.FirstOrDefault(r => r.Id == id).Name} to User Roles in group {_guildConfig.UserRoles.First(rg => rg.Key.ToLower() == context.Parameters.Rejoin().ToLower()).Key}");
                                     }
                                     else
                                     {
