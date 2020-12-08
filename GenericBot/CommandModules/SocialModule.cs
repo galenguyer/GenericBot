@@ -152,6 +152,20 @@ namespace GenericBot.CommandModules
             };
             commands.Add(markov);
 
+            Command danni = new Command("danni");
+            danni.SendTyping = false;
+            danni.ToExecute += async (context) =>
+            {
+                if (context.Channel.Id != 660877782980624385)
+                {
+                    return;
+                }
+                string list = new WebClient().DownloadString("https://isdanniabottom.com/i/index");
+                string filename = list.Split().ToList().GetRandomItem();
+                await context.Message.ReplyAsync($"https://isdanniabottom.com/i/{filename}");
+            };
+            commands.Add(danni);
+
             return commands;
         }
     }
