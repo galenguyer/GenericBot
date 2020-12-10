@@ -149,7 +149,14 @@ namespace GenericBot.CommandModules
                             var role = roles.Any(r => r.Name.ToLower() == roleName.ToLower())
                                 ? roles.First(r => r.Name.ToLower() == roleName.ToLower())
                                 : roles.First();
-                            dbUser.AddStoredRole(role.Id);
+                            if (Core.GetGuildConfig(context.Guild.Id).RequiresRoles.ContainsKey(role.Id))
+                            {
+                                if (!Core.GetGuildConfig(context.Guild.Id).RequiresRoles[role.Id].All(r => context.Guild.GetUser(context.Author.Id).Roles.Any(ur => ur.Id == r)))
+                                {
+                                    messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"You don't have the requires roles for `{role.Name}`").WithColor(new Color(0xFFFF00)).Build()).Result);
+                                    continue;
+                                }
+                            }
                             if (context.Guild.GetUser(context.Author.Id).Roles.Any(r => r.Id == role.Id))
                             {
                                 messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"You already have that role!").WithColor(new Color(0xFFFF00)).Build()).Result);
@@ -157,6 +164,7 @@ namespace GenericBot.CommandModules
                             else
                             {
                                 await context.Guild.GetUser(context.Author.Id).AddRoleAsync(role);
+                                dbUser.AddStoredRole(role.Id);
                                 messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"Assigned you `{role.Name}`").WithColor(new Color(0x9B00)).Build()).Result);
                             }
                         }
