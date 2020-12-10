@@ -137,7 +137,7 @@ namespace GenericBot.CommandModules
                         .Where(r => Core.GetGuildConfig(context.Guild.Id).UserRoles.Any(rg => rg.Value.Contains(r.Id))).ToList();
                     var reqRoles = context.Guild.Roles.Where(r => r.Name.ToLower().Contains(roleName.ToLower().Trim()))
                         .Where(r => Core.GetGuildConfig(context.Guild.Id).RequiresRoles.ContainsKey(r.Id)).ToList();
-                    roles.ToList().AddRange(reqRoles);
+                    roles.AddRange(reqRoles);
                     if (!roles.Any() && !reqRoles.Any())
                     {
                         messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"Could not find any assignable matching `{roleName}`").WithColor(new Color(0xFFFF00)).Build()).Result);
