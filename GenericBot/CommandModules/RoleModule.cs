@@ -129,11 +129,18 @@ namespace GenericBot.CommandModules
                 {
                     if (string.IsNullOrWhiteSpace(roleName))
                         continue;
-                    var roles = context.Guild.Roles.Where(r => r.Name.ToLower().Contains(roleName.ToLower().Trim()))
-                        .Where(r => Core.GetGuildConfig(context.Guild.Id).UserRoles.Any(rg => rg.Value.Contains(r.Id)));
-                    if (!roles.Any())
+                    foreach (var roleWithReqs in Core.GetGuildConfig(context.Guild.Id).RequiresRoles)
                     {
-                        messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"Could not find any user roles matching `{roleName}`").WithColor(new Color(0xFFFF00)).Build()).Result);
+                    
+                    }
+                    var roles = context.Guild.Roles.Where(r => r.Name.ToLower().Contains(roleName.ToLower().Trim()))
+                        .Where(r => Core.GetGuildConfig(context.Guild.Id).UserRoles.Any(rg => rg.Value.Contains(r.Id))).ToList();
+                    var reqRoles = context.Guild.Roles.Where(r => r.Name.ToLower().Contains(roleName.ToLower().Trim()))
+                        .Where(r => Core.GetGuildConfig(context.Guild.Id).RequiresRoles.ContainsKey(r.Id)).ToList();
+                    roles.ToList().AddRange(reqRoles);
+                    if (!roles.Any() && !reqRoles.Any())
+                    {
+                        messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"Could not find any assignable matching `{roleName}`").WithColor(new Color(0xFFFF00)).Build()).Result);
                     }
                     else
                     {
