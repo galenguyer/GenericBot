@@ -216,6 +216,75 @@ namespace GenericBot.CommandModules
 
                 #endregion UserRoles
 
+                #region RequiresRoles
+
+                else if (context.Parameters[0].ToLower().Equals("requiresroles"))
+                {
+                    if (context.Parameters.Count == 1)
+                    {
+                        await context.Message.ReplyAsync($"Please enter a config option");
+                        return;
+                    }
+                    var checkRegex = new Regex(@"requiresRoles (add|remove) \d{17,19} requires \d{17,19}");
+                    if (!checkRegex.IsMatch(context.ParameterString.ToLower().Replace("  ", " ")))
+                    {
+                        await context.Message.ReplyAsync($"Syntax incorrect. Please use the syntax {_guildConfig.Prefix}config requiresRoles <add|remove> [roleid] requires [requiredRoleId]");
+                    }
+                    if (ulong.TryParse(context.Parameters[2], out ulong roleId) && context.Guild.Roles.Select(r => r.Id).Any(u => u.Equals(roleId))
+                    && ulong.TryParse(context.Parameters[2], out ulong requiredRoleId) && context.Guild.Roles.Select(r => r.Id).Any(u => u.Equals(requiredRoleId)))
+                    {
+                        if (_guildConfig.RequiresRoles == null)
+                            _guildConfig.RequiresRoles = new Dictionary<ulong, List<ulong>>();
+                        if (context.Parameters[1].ToLower().Equals("add"))
+                        {
+                            if (_guildConfig.RequiresRoles.ContainsKey(roleId))
+                            {
+                                if (_guildConfig.RequiresRoles[roleId] == null || !_guildConfig.RequiresRoles[roleId].Contains(requiredRoleId))
+                                {
+                                    if (_guildConfig.RequiresRoles[roleId] == null)
+                                    {
+                                        _guildConfig.RequiresRoles[roleId] = new List<ulong>();
+                                    }
+                                    _guildConfig.RequiresRoles[roleId].Add(requiredRoleId);
+                                    await context.Message.ReplyAsync($"{context.Guild.Roles.First(r => r.Id == roleId).Name} now requires {context.Guild.Roles.First(r => r.Id == requiredRoleId).Name}");
+
+                                }
+                                else
+                                {
+                                    await context.Message.ReplyAsync($"{context.Guild.Roles.First(r => r.Id == roleId).Name} already requires {context.Guild.Roles.First(r => r.Id == requiredRoleId).Name}");
+                                }
+                            }
+                            else
+                            {
+                                _guildConfig.RequiresRoles[roleId] = new List<ulong> { requiredRoleId };
+                                await context.Message.ReplyAsync($"{context.Guild.Roles.First(r => r.Id == roleId).Name} now requires {context.Guild.Roles.First(r => r.Id == requiredRoleId).Name}");
+                            }
+                        }
+                        else if (context.Parameters[1].ToLower().Equals("remove"))
+                        {
+                            if (_guildConfig.RequiresRoles.ContainsKey(roleId))
+                            {
+                                if (_guildConfig.RequiresRoles[roleId] == null || !_guildConfig.RequiresRoles[roleId].Contains(requiredRoleId))
+                                {
+                                    await context.Message.ReplyAsync($"");
+                                }
+                                else
+                                {
+                                    await context.Message.ReplyAsync($"");
+                                }
+                            }
+                            else
+                            {
+                                await context.Message.ReplyAsync($"");
+                            }
+                        }
+
+                    }
+                    else { await context.Message.ReplyAsync($"One of those is not a valid roleId"); }
+                }
+
+                #endregion RequiresRoles
+
                 #region Prefix
 
                 else if (context.Parameters[0].ToLower().Equals("prefix"))
