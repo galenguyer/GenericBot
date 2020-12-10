@@ -75,6 +75,42 @@ namespace GenericBot.CommandModules
             };
             commands.Add(UserRoles);
 
+            Command requiresRoles = new Command("requiresRoles");
+            requiresRoles.Description = "list all available roles that have required roles";
+            requiresRoles.WorksInDms = false;
+            requiresRoles.ToExecute += async (context) =>
+            {
+                string prefix = Core.GetPrefix(context);
+                string message = $"You can use `{prefix}iam` and `{prefix}iamnot` with any of these roles:\n _\\*(Pro tip: You can add/remove more than one role at a time by seperating each role with a comma like `{prefix}iam role0, role1, role2, etc`)*_\n";
+                var config = Core.GetGuildConfig(context.Guild.Id);
+                // check that any are available
+                if (!config.RequiresRoles.Any(rr => context.Guild.Roles.Any(r => r.Id == rr.Key)))
+                {
+                    await context.Message.ReplyAsync("It looks like there are no roles with prerequisites on this server. If you believe this is in error, please talk to your server administrators!");
+                    return;
+                }
+                foreach (var roleWithReqs in config.RequiresRoles)
+                {
+                    if (!context.Guild.Roles.Any(r => r.Id == roleWithReqs.Key))
+                        continue;
+                    var actuallyRequiredRoles = roleWithReqs.Value.Where(id => context.Guild.Roles.Any(r => r.Id == id));
+                    if (actuallyRequiredRoles.Any())
+                    {
+                        message += $"\n**{context.Guild.Roles.First(r => r.Id == roleWithReqs.Key).Name}**: requires {actuallyRequiredRoles.Select(r => $"{(context.Guild.GetUser(context.Author.Id).Roles.Any(ur => ur.Id == r) ? "\\✔" : "✘")} {context.Guild.Roles.First(role => role.Id == r).Name}").ToList().SumAnd()}";
+                    }
+                    else
+                    {
+                        message += $"\n**{context.Guild.Roles.First(r => r.Id == roleWithReqs.Key).Name}**: requires no roles... this should probably be a UserRole!";
+                    }
+                }
+
+                foreach (var str in message.MessageSplit())
+                {
+                    await context.Message.ReplyAsync(str);
+                }
+            };
+            commands.Add(requiresRoles);
+
             Command iam = new Command("iam");
             iam.Description = "Join a User Role";
             iam.Usage = "iam <role name>";

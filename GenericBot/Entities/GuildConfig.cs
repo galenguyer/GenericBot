@@ -28,6 +28,8 @@ namespace GenericBot.Entities
         public List<ulong> ModRoleIds { get; set; }
         [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
         public Dictionary<string, List<ulong>> UserRoles { get; set; }
+        [BsonDictionaryOptions(DictionaryRepresentation.ArrayOfArrays)]
+        public Dictionary<ulong, List<ulong>> RequiresRoles { get; set; }
         public ulong MutedRoleId { get; set; }
         public List<ulong> MutedUsers { get; set; }
         public List<ulong> AutoRoleIds { get; set; }
