@@ -229,9 +229,10 @@ namespace GenericBot.CommandModules
                     if (!checkRegex.IsMatch(context.ParameterString.ToLower().Replace("  ", " ")))
                     {
                         await context.Message.ReplyAsync($"Syntax incorrect. Please use the syntax {_guildConfig.Prefix}config requiresRoles <add|remove> [roleid] requires [requiredRoleId]");
+                        return;
                     }
                     if (ulong.TryParse(context.Parameters[2], out ulong roleId) && context.Guild.Roles.Select(r => r.Id).Any(u => u.Equals(roleId))
-                    && ulong.TryParse(context.Parameters[2], out ulong requiredRoleId) && context.Guild.Roles.Select(r => r.Id).Any(u => u.Equals(requiredRoleId)))
+                    && ulong.TryParse(context.Parameters[4], out ulong requiredRoleId) && context.Guild.Roles.Select(r => r.Id).Any(u => u.Equals(requiredRoleId)))
                     {
                         if (_guildConfig.RequiresRoles == null)
                             _guildConfig.RequiresRoles = new Dictionary<ulong, List<ulong>>();
