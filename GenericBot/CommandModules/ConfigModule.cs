@@ -225,7 +225,7 @@ namespace GenericBot.CommandModules
                         await context.Message.ReplyAsync($"Please enter a config option");
                         return;
                     }
-                    var checkRegex = new Regex(@"requiresRoles (add|remove) \d{17,19} requires \d{17,19}");
+                    var checkRegex = new Regex(@"requiresroles (add|remove) \d{17,19} requires \d{17,19}", RegexOptions.IgnoreCase);
                     if (!checkRegex.IsMatch(context.ParameterString.ToLower().Replace("  ", " ")))
                     {
                         await context.Message.ReplyAsync($"Syntax incorrect. Please use the syntax {_guildConfig.Prefix}config requiresRoles <add|remove> [roleid] requires [requiredRoleId]");
