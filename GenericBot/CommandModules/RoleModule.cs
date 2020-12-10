@@ -163,7 +163,6 @@ namespace GenericBot.CommandModules
                         catch (Exception e)
                         {
                             await Core.Logger.LogErrorMessage(e, context);
-                            Console.WriteLine(e.StackTrace);
                             messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription($"I may not have permissions to do that").WithColor(new Color(0xFFFF00)).Build()).Result);
                         }
                     }
