@@ -267,16 +267,21 @@ namespace GenericBot.CommandModules
                             {
                                 if (_guildConfig.RequiresRoles[roleId] == null || !_guildConfig.RequiresRoles[roleId].Contains(requiredRoleId))
                                 {
-                                    await context.Message.ReplyAsync($"");
+                                    await context.Message.ReplyAsync($"That requirement does not exist");
                                 }
                                 else
                                 {
-                                    await context.Message.ReplyAsync($"");
+                                    _guildConfig.RequiresRoles[roleId].RemoveAll(r => r == requiredRoleId);
+                                    if (!_guildConfig.RequiresRoles[roleId].Any())
+                                    {
+                                        _guildConfig.RequiresRoles.Remove(roleId);
+                                    }
+                                    await context.Message.ReplyAsync($"{context.Guild.Roles.First(r => r.Id == roleId).Name} no longer requires {context.Guild.Roles.First(r => r.Id == requiredRoleId).Name}");
                                 }
                             }
                             else
                             {
-                                await context.Message.ReplyAsync($"");
+                                await context.Message.ReplyAsync($"That requirement does not exist");
                             }
                         }
 
