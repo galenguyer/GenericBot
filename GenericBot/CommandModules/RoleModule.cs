@@ -153,7 +153,8 @@ namespace GenericBot.CommandModules
                             var role = roles.Any(r => r.Name.ToLower() == roleName.ToLower())
                                 ? roles.First(r => r.Name.ToLower() == roleName.ToLower())
                                 : roles.First();
-                            if (Core.GetGuildConfig(context.Guild.Id).RequiresRoles.ContainsKey(role.Id))
+                            if (Core.GetGuildConfig(context.Guild.Id).RequiresRoles != null && 
+                                Core.GetGuildConfig(context.Guild.Id).RequiresRoles.ContainsKey(role.Id))
                             {
                                 if (!Core.GetGuildConfig(context.Guild.Id).RequiresRoles[role.Id].All(r => context.Guild.GetUser(context.Author.Id).Roles.Any(ur => ur.Id == r)))
                                 {
