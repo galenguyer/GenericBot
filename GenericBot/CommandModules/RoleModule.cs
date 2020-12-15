@@ -125,8 +125,10 @@ namespace GenericBot.CommandModules
                     messagesToDelete.Add(context.Channel.SendMessageAsync("", embed: new EmbedBuilder().WithDescription("Please select a role to join").WithColor(new Color(0xFFFF00)).Build()).Result);
                 }
 
+                Console.WriteLine(context.ParameterString);
                 foreach (var roleName in context.ParameterString.Trim(',', ' ').Split(',').Select(r => r.Trim('"')))
                 {
+                    Console.WriteLine(roleName);
                     if (string.IsNullOrWhiteSpace(roleName))
                         continue;
                     foreach (var roleWithReqs in Core.GetGuildConfig(context.Guild.Id).RequiresRoles)
