@@ -126,15 +126,12 @@ namespace GenericBot.CommandModules
                 }
 
                 Console.WriteLine(context.ParameterString);
-                foreach (var roleName in context.ParameterString.Trim(',', ' ').Split(',').Select(r => r.Trim('"')))
+                foreach (var roleName in context.ParameterString.Trim(',', ' ').Split(',').Select(r => r.Trim('"')).Where(r => r != null))
                 {
-                    Console.WriteLine(roleName);
                     if (string.IsNullOrWhiteSpace(roleName))
                         continue;
-                    foreach (var roleWithReqs in Core.GetGuildConfig(context.Guild.Id).RequiresRoles)
-                    {
-                    
-                    }
+                    Console.WriteLine(roleName);
+
                     var roles = context.Guild.Roles.Where(r => r.Name.ToLower().Contains(roleName.ToLower().Trim()))
                         .Where(r => Core.GetGuildConfig(context.Guild.Id).UserRoles.Any(rg => rg.Value.Contains(r.Id))).ToList();
 
