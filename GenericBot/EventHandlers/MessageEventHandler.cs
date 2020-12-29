@@ -29,6 +29,24 @@ namespace GenericBot
                 }
             }
             catch { }
+            // pluralkit logging integration
+            try 
+            { 
+                if (parameterMessage.Author.IsWebhook)
+                {
+                    using (var client = new System.Net.WebClient()) 
+                    {
+                        var resp = client.DownloadString($"https://api.pluralkit.me/v1/msg/{parameterMessage.Id}");
+                        var type = new
+                        {
+                            original = "string"
+                        };
+                        var obj = JsonConvert.DeserializeAnonymousType(resp, type);
+                        Program.ClearedMessageIds.Add(ulong.Parse(obj.original));
+                    }
+                }
+            }
+            catch { }
 
             try
             {
