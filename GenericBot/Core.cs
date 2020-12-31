@@ -113,6 +113,12 @@ namespace GenericBot
             Commands = Commands.Where(c => !CommandsToExclude.Contains(c.Name)).ToList();
         }
 
+        public static void DropCaches()
+        {
+            CustomCommands = new Dictionary<ulong, List<CustomCommand>>();
+            LoadedGuildConfigs = new List<GuildConfig>();
+        }
+
         /// <summary>
         /// Check if a user is blacklisted from running bot commands globally
         /// </summary>

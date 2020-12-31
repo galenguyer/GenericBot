@@ -28,6 +28,16 @@ namespace GenericBot.CommandModules
             };
             commands.Add(checkdbtime);
 
+            Command dropCaches = new Command("dropcaches");
+            dropCaches.RequiredPermission = Command.PermissionLevels.GlobalAdmin;
+            dropCaches.Description = "Drop caches from the Core so the DB is hit again";
+            dropCaches.ToExecute += async (context) => 
+            {
+                Core.DropCaches();
+                await context.Message.ReplyAsync("Caches dropped!");
+            };
+            commands.Add(dropCaches);
+
             Command ping = new Command("ping");
             ping.WorksInDms = true;
             ping.SendTyping = false;
