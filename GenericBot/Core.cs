@@ -295,6 +295,11 @@ namespace GenericBot
         public static List<AuditCommand> GetAuditLog(ulong guildId) =>
             DatabaseEngine.GetAuditLog(guildId);
 
+        public static void AddToCommandLog(ParsedCommand command, ulong guildId) =>
+            DatabaseEngine.AddToCommandLog(command, guildId);
+        public static List<AuditCommand> GetCommandLog(ulong guildId) =>
+            DatabaseEngine.GetCommandLog(guildId);
+
         public static void AddStatus(Status status) =>
             DatabaseEngine.AddStatus(status);
 

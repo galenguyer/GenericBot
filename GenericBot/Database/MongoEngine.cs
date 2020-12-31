@@ -234,6 +234,28 @@ namespace GenericBot.Database
             return _collection.Find(new BsonDocument()).ToList();
         }
 
+        ///<inheritdoc cref="IDatabaseEngine.AddToCommandLog(ParsedCommand, ulong)"/>
+        public void AddToCommandLog(ParsedCommand command, ulong guildId)
+        {
+            Core.Logger.LogGenericMessage($"[Mongo] SAVED CommandLog TO {guildId}");
+
+            var _userDb = GetDatabaseFromGuildId(guildId);
+            var _collection = _userDb.GetCollection<AuditCommand>("commandlog");
+
+            _collection.InsertOne(new AuditCommand(command));
+        }
+
+        ///<inheritdoc cref="IDatabaseEngine.GetCommandLog(ulong)"/>
+        public List<AuditCommand> GetCommandLog(ulong guildId)
+        {
+            Core.Logger.LogGenericMessage($"[Mongo] GOT CommandLog FROM {guildId}");
+
+            var _userDb = GetDatabaseFromGuildId(guildId);
+            var _collection = _userDb.GetCollection<AuditCommand>("commandlog");
+
+            return _collection.Find(new BsonDocument()).ToList();
+        }
+
         ///<inheritdoc cref="IDatabaseEngine.CreateGiveaway(Giveaway, ulong)"/>
         public Giveaway CreateGiveaway(Giveaway giveaway, ulong guildId)
         {

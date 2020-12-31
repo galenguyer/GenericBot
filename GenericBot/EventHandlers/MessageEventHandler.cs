@@ -99,13 +99,17 @@ namespace GenericBot
                     if (Core.GetCustomCommands(guildId).HasElement(c => c.Name == command.Name,
                         out CustomCommand customCommand))
                     {
+                        Core.AddToCommandLog(command, guildId);
                         if (customCommand.Delete)
                             parameterMessage.DeleteAsync();
                         parameterMessage.ReplyAsync(customCommand.Response);
                     }
 
                     if (command != null && command.RawCommand != null)
-                        command.Execute();
+                    {
+                        Core.AddToCommandLog(command, guildId);
+                        command.Execute(); 
+                    }
                 }
             }
             catch (Exception ex)

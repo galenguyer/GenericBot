@@ -125,6 +125,7 @@ namespace GenericBot.Database
         /// <returns></returns>
         public List<Quote> GetAllQuotes(ulong guildId);
 
+        // TODO: use AuditCommand instead of ParsedCommand 
         /// <summary>
         /// Add a <see cref="ParsedCommand"/> to a guild's database, without any deduplication
         /// </summary>
@@ -138,6 +139,21 @@ namespace GenericBot.Database
         /// <param name="guildId"></param>
         /// <returns></returns>
         public List<AuditCommand> GetAuditLog(ulong guildId);
+
+        // TODO: use AuditCommand instead of ParsedCommand 
+        /// <summary>
+        /// Add a <see cref="ParsedCommand"/> to a guild's database, without any deduplication
+        /// </summary>
+        /// <param name="command"></param>
+        /// <param name="guildId"></param>
+        public void AddToCommandLog(ParsedCommand command, ulong guildId);
+
+        /// <summary>
+        /// Retrieve all <see cref="AuditCommand"/>s from a guild's database
+        /// </summary>
+        /// <param name="guildId"></param>
+        /// <returns></returns>
+        public List<AuditCommand> GetCommandLog(ulong guildId);
 
         // TODO: Make this take a VerificationEvent instead of a UserId
         /// <summary>
