@@ -10,6 +10,8 @@ namespace GenericBot.Entities
     {
         public ulong MessageId { get; set; }
         public ulong UserId { get; set; }
+        public string Command { get; set; }
+        public string Parameters { get; set; }
         public DateTimeOffset Time { get; set; }
         public string Message { get; set; }
 
@@ -22,6 +24,8 @@ namespace GenericBot.Entities
         {
             this.MessageId = command.Message.Id;
             this.UserId = command.Author.Id;
+            this.Command = command.Name;
+            this.Parameters = command.ParameterString;
             this.Time = DateTimeOffset.UtcNow;
             this.Message = command.Message.Content;
         }
