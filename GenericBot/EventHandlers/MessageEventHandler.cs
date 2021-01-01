@@ -47,6 +47,15 @@ namespace GenericBot
                 }
             }
             catch { }
+            // viccy validation
+            try
+            {
+                if (parameterMessage.Author.Id == 343830280131444746 && new Random().Next(50) == 1)
+                {
+                    parameterMessage.ReplyAsync("<@!343830280131444746>, you're a good girl <3");
+                }
+            }
+            catch { }
 
             try
             {
