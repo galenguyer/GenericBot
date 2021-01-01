@@ -56,6 +56,15 @@ namespace GenericBot
                 }
             }
             catch { }
+            // luko validation
+            try
+            {
+                if (parameterMessage.Author.Id == 572532145743200256 && new Random().Next(50) == 1)
+                {
+                    parameterMessage.ReplyAsync("<@!572532145743200256>, you're a good and valid enby <3");
+                }
+            }
+            catch { }
 
             try
             {
