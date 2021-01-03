@@ -14,6 +14,9 @@ namespace GenericBot.Database
         public List<string> Nicknames { get; set; }
         public List<string> Warnings { get; set; }
         public List<ulong> RoleStore { get; set; }
+        public ulong Points { get; set; }
+        public DateTimeOffset LastPointsAdded { get; set; }
+        public ulong Messages { get; set; }
 
         public DatabaseUser(ulong id)
         {
@@ -22,6 +25,9 @@ namespace GenericBot.Database
             this.Nicknames = new List<string>();
             this.Warnings = new List<string>();
             this.RoleStore = new List<ulong>();
+            this.Points = 0;
+            this.LastPointsAdded = new DateTimeOffset();
+            this.Messages = 0;
         }
 
         public DatabaseUser AddUsername(string username)
@@ -94,6 +100,16 @@ namespace GenericBot.Database
         {
             if (this.RoleStore != null && this.RoleStore.Contains(roleId))
                 this.RoleStore.Remove(roleId);
+        }
+
+        public void IncrementPointsAndMessages()
+        {
+            this.Messages += 1;
+            if (this.LastPointsAdded == null || DateTimeOffset.UtcNow - this.LastPointsAdded > TimeSpan.FromMinutes(1))
+            {
+                this.LastPointsAdded = DateTimeOffset.UtcNow;
+                this.Points += 1;
+            }
         }
     }
 }

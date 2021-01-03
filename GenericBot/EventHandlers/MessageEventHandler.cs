@@ -52,7 +52,7 @@ namespace GenericBot
             {
                 if (parameterMessage.Author.Id == 343830280131444746 && new Random().Next(50) == 1)
                 {
-                    parameterMessage.ReplyAsync("<@!343830280131444746>, you're a good girl <3");
+                    await parameterMessage.ReplyAsync("<@!343830280131444746>, you're a good girl <3");
                 }
             }
             catch { }
@@ -61,10 +61,21 @@ namespace GenericBot
             {
                 if (parameterMessage.Author.Id == 572532145743200256 && new Random().Next(50) == 1)
                 {
-                    parameterMessage.ReplyAsync("<@!572532145743200256>, you're a good and valid enby <3");
+                    await parameterMessage.ReplyAsync("<@!572532145743200256>, you're a good and valid enby <3");
                 }
             }
             catch { }
+            // points 
+            try
+            {
+                var dbUser = Core.GetUserFromGuild(parameterMessage.Author.Id, parameterMessage.GetGuild().Id);
+                dbUser.IncrementPointsAndMessages();
+                Core.SaveUserToGuild(dbUser, parameterMessage.GetGuild().Id);
+            }
+            catch (Exception e)
+            {
+                await Core.Logger.LogErrorMessage(e, null);
+            }
 
             try
             {
