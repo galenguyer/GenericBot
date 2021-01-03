@@ -30,7 +30,7 @@ namespace GenericBot.CommandModules
                 var top = sortedUsers.Skip(10 * 0).Take(10).ToList();
                 string reply = $"The top {10} members are:\n";
 
-                for(int i = 0; i < 10; i++)
+                for(int i = 0; i < Math.Min(10, top.Count); i++)
                 {
                     reply += $"**{i+1}**: {context.Guild.GetUser(top[i].Id).GetDisplayName()} ({top[i].Points} points)\n";
                 }
