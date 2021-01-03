@@ -32,7 +32,7 @@ namespace GenericBot.CommandModules
 
                 for(int i = 0; i < 10; i++)
                 {
-                    reply += $"**{i}**: {context.Guild.GetUser(top[i].Id).GetDisplayName()} ({top[i].Points} points)\n";
+                    reply += $"**{i+1}**: {context.Guild.GetUser(top[i].Id).GetDisplayName()} ({top[i].Points} points)\n";
                 }
 
                 await context.Message.ReplyAsync(reply);
