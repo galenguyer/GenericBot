@@ -30,7 +30,7 @@ namespace GenericBot.CommandModules
                 var top = sortedUsers.Skip(10 * 0).Take(10).ToList();
                 var position = sortedUsers.FindIndex(u => u.Id == context.Author.Id);
                 
-                string reply = $"{context.Author.Mention}, you are at rank {position + 1} with {sortedUsers[position].Points} points! The top {10} members are:\n";
+                string reply = $"{context.Author.GetDisplayName()}, you are at rank {position + 1} with {sortedUsers[position].Points} points! The top {10} members are:\n";
 
                 for(int i = 0; i < Math.Min(10, top.Count); i++)
                 {
