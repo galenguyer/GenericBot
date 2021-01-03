@@ -37,6 +37,7 @@ namespace GenericBot
             var dbUser = Core.GetUserFromGuild(user.Id, user.Guild.Id);
             bool alreadyJoined = dbUser.Usernames != null;
             dbUser.AddUsername(user.Username);
+            dbUser.IsPresent = true;
             Core.SaveUserToGuild(dbUser, user.Guild.Id);
 
             #endregion Databasae
@@ -161,6 +162,10 @@ namespace GenericBot
             await user.Guild.GetTextChannel(guildConfig.LoggingChannelId).SendMessageAsync("", embed: log.Build());
 
             #endregion Logging
+
+            var dbUser = Core.GetUserFromGuild(user.Id, user.Guild.Id);
+            dbUser.IsPresent = false;
+            Core.SaveUserToGuild(dbUser, user.Guild.Id);
         }
     }
 }

@@ -17,6 +17,7 @@ namespace GenericBot.Database
         public ulong Points { get; set; }
         public DateTimeOffset LastPointsAdded { get; set; }
         public ulong Messages { get; set; }
+        public bool IsPresent { get; set; }
 
         public DatabaseUser(ulong id)
         {
@@ -28,6 +29,7 @@ namespace GenericBot.Database
             this.Points = 0;
             this.LastPointsAdded = new DateTimeOffset();
             this.Messages = 0;
+            this.IsPresent = true;
         }
 
         public DatabaseUser AddUsername(string username)
@@ -104,6 +106,7 @@ namespace GenericBot.Database
 
         public void IncrementPointsAndMessages()
         {
+            this.IsPresent = true;
             this.Messages += 1;
             if (this.LastPointsAdded == null || DateTimeOffset.UtcNow - this.LastPointsAdded > TimeSpan.FromMinutes(1))
             {
