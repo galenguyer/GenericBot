@@ -40,6 +40,7 @@ namespace GenericBot.Entities
         public string JoinMessage { get; set; }
         public ulong JoinMessageChannelId { get; set; }
         public AntiSpamLevel AntispamLevel { get; set; }
+        public bool PointsEnabled { get; set; }
 
         public GuildConfig(ulong id)
         {
@@ -52,6 +53,7 @@ namespace GenericBot.Entities
             ModRoleIds = new List<ulong>();
             UserRoles = new Dictionary<string, List<ulong>>();
             AutoRoleIds = new List<ulong>();
+            PointsEnabled = false;
         }
     }
 

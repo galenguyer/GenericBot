@@ -25,7 +25,7 @@ namespace GenericBot.CommandModules
                 var _guildConfig = Core.GetGuildConfig(context.Guild.Id);
                 if (context.Parameters.IsEmpty())
                 {
-                    string currentConfig = 
+                    string currentConfig =
                     $"Prefix: `{Core.GetPrefix(context)}`\n" +
                     $"Admin Roles: `{JsonConvert.SerializeObject(_guildConfig.AdminRoleIds)}`\n" +
                     $"Mod Roles: `{JsonConvert.SerializeObject(_guildConfig.ModRoleIds)}`\n" +
@@ -37,6 +37,7 @@ namespace GenericBot.CommandModules
                     $"Verification:\n" +
                     $"    Role Id: `{_guildConfig.VerifiedRole}`\n" +
                     $"    Message: Do `{Core.GetPrefix(context)}config verification message` to see the message\n" +
+                    $"Points: {_guildConfig.PointsEnabled}" +
                     $"Auto Roles: `{JsonConvert.SerializeObject(_guildConfig.AutoRoleIds)}`";
 
                     await context.Message.ReplyAsync(currentConfig);
@@ -181,7 +182,7 @@ namespace GenericBot.CommandModules
                                         {
                                             _guildConfig.UserRoles.Add("", new List<ulong>());
                                         }
-                                        catch (ArgumentException ex) 
+                                        catch (ArgumentException ex)
                                         {
                                             await Core.Logger.LogErrorMessage(ex, context);
                                         }
@@ -304,7 +305,7 @@ namespace GenericBot.CommandModules
                             _guildConfig.Prefix = new Regex("\"(.*?)\"").Match(context.Message.Content).Value.Trim('"');
                         }
                         await context.Message.ReplyAsync($"The prefix has been set to `{_guildConfig.Prefix}`");
-                    } 
+                    }
                     catch (Exception ex)
                     {
                         await Core.Logger.LogErrorMessage(ex, context);
@@ -623,6 +624,28 @@ namespace GenericBot.CommandModules
                 }
 
                 #endregion Antispam
+
+                #region Points
+
+                else if (context.Parameters[0].ToLower().Equals("points"))
+                {
+                    if (context.Parameters[1].ToLower().Equals("true") || context.Parameters[1].ToLower().Contains("enable"))
+                    {
+                        _guildConfig.PointsEnabled = true;
+                    }
+                    else if (context.Parameters[1].ToLower().Equals("false") || context.Parameters[1].ToLower().Contains("disable"))
+                    {
+                        _guildConfig.PointsEnabled = false;
+                    }
+                    else
+                    {
+                         await context.Message.ReplyAsync($"Unknown property `{context.Parameters[1]}`.");
+                    }
+                    await context.Message.ReplyAsync($"Points Enabled: {_guildConfig.PointsEnabled}");
+                }
+
+                #endregion Points
+
 
                 else await context.Message.ReplyAsync($"Unknown property `{context.Parameters[0]}`.");
 
