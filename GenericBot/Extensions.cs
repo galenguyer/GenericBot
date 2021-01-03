@@ -37,7 +37,10 @@ namespace GenericBot
             if (guildUser != null && !string.IsNullOrEmpty(guildUser.Nickname))
                 return guildUser.Nickname;
 
-            return user.Username;
+            if (user != null)
+                return user.Username;
+            else
+                return "Unknown User";
         }
 
         public static SocketGuild GetGuild(this SocketMessage msg)
