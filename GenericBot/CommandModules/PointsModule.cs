@@ -22,6 +22,23 @@ namespace GenericBot.CommandModules
             };
             commands.Add(points);
 
+            Command leaderboard = new Command("leaderboard");
+            leaderboard.Description = "Display the points leaderboard for the server";
+            leaderboard.ToExecute += async (context) =>
+            {
+                var sortedUsers = Core.GetAllUsers(context.Guild.Id).Where(u => u.IsPresent).OrderByDescending(u => u.Points).ToList();
+                var top = sortedUsers.Skip(10 * 0).Take(10).ToList();
+                string reply = $"The top {10} members are:\n";
+
+                for(int i = 0; i < 10; i++)
+                {
+                    reply += $"{i}: {context.Guild.GetUser(top[i].Id).GetDisplayName()} ({top[i].Points} points)";
+                }
+
+                await context.Message.ReplyAsync(reply);
+            };
+            commands.Add(leaderboard);
+
             return commands;
         }
     }
