@@ -37,7 +37,7 @@ namespace GenericBot.CommandModules
                     $"Verification:\n" +
                     $"    Role Id: `{_guildConfig.VerifiedRole}`\n" +
                     $"    Message: Do `{Core.GetPrefix(context)}config verification message` to see the message\n" +
-                    $"Points: {_guildConfig.PointsEnabled}" +
+                    $"Points: {_guildConfig.PointsEnabled}\n" +
                     $"Auto Roles: `{JsonConvert.SerializeObject(_guildConfig.AutoRoleIds)}`";
 
                     await context.Message.ReplyAsync(currentConfig);
