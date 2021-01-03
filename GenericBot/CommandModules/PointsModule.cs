@@ -16,6 +16,11 @@ namespace GenericBot.CommandModules
             points.Description = "Find out how many points you have and your rank on the leaderboard";
             points.ToExecute += async (context) =>
             {
+                if (!Core.GetGuildConfig(context.Guild.Id).PointsEnabled)
+                {
+                    await context.Message.ReplyAsync("Sorry, points are disabled for this server");
+                    return;
+                }
                 var sortedUsers = Core.GetAllUsers(context.Guild.Id).Where(u => u.IsPresent).OrderByDescending(u => u.Points).ToList();
                 var position = sortedUsers.FindIndex(u => u.Id == context.Author.Id);
                 await context.Message.ReplyAsync($"{context.Author.Mention}, you are at rank {position + 1} with {sortedUsers[position].Points} points!");
@@ -26,6 +31,11 @@ namespace GenericBot.CommandModules
             leaderboard.Description = "Display the points leaderboard for the server";
             leaderboard.ToExecute += async (context) =>
             {
+                if (!Core.GetGuildConfig(context.Guild.Id).PointsEnabled)
+                {
+                    await context.Message.ReplyAsync("Sorry, points are disabled for this server");
+                    return;
+                }
                 var sortedUsers = Core.GetAllUsers(context.Guild.Id).Where(u => u.IsPresent).OrderByDescending(u => u.Points).ToList();
                 var top = sortedUsers.Skip(10 * 0).Take(10).ToList();
                 var position = sortedUsers.FindIndex(u => u.Id == context.Author.Id);
