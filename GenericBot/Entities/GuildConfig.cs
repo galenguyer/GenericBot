@@ -41,6 +41,8 @@ namespace GenericBot.Entities
         public ulong JoinMessageChannelId { get; set; }
         public AntiSpamLevel AntispamLevel { get; set; }
         public bool PointsEnabled { get; set; }
+        public ulong TrustedRoleId { get; set; }
+        public ulong TrustedRolePointThreshold { get; set; }
 
         public GuildConfig(ulong id)
         {
@@ -54,6 +56,8 @@ namespace GenericBot.Entities
             UserRoles = new Dictionary<string, List<ulong>>();
             AutoRoleIds = new List<ulong>();
             PointsEnabled = false;
+            TrustedRoleId = 0;
+            TrustedRolePointThreshold = 0;
         }
     }
 
