@@ -154,6 +154,11 @@ namespace GenericBot.CommandModules
                 var bannedUser = Core.GetUserFromGuild(user.Id, context.Guild.Id)
                     .AddWarning(
                         $"Banned {timeMessage} for `{reason}` (By `{context.Author}` At `{DateTime.UtcNow.ToString(@"yyyy-MM-dd HH:mm tt")} GMT`)");
+
+                // Remove trusted role from rolestore, if present and zero-out points to prevent it being re-added.
+                bannedUser.RemoveStoredRole(guildconfig.TrustedRoleId);
+                bannedUser.Points = 0;
+
                 Core.SaveUserToGuild(bannedUser, context.Guild.Id);
                 Core.SaveBanToGuild(new GenericBan(user.Id, context.Guild.Id, reason, time), context.Guild.Id);
 
@@ -307,6 +312,11 @@ namespace GenericBot.CommandModules
                 var bannedUser = Core.GetUserFromGuild(user.Id, context.Guild.Id)
                     .AddWarning(
                         $"Purgebanned {timeMessage} for `{reason}` (By `{context.Author}` At `{DateTime.UtcNow.ToString(@"yyyy-MM-dd HH:mm tt")} GMT`)");
+
+                // Remove trusted role from rolestore, if present and zero-out points to prevent it being re-added.
+                bannedUser.RemoveStoredRole(guildconfig.TrustedRoleId);
+                bannedUser.Points = 0;
+
                 Core.SaveUserToGuild(bannedUser, context.Guild.Id);
                 Core.SaveBanToGuild(new GenericBan(user.Id, context.Guild.Id, reason, time), context.Guild.Id);
 
@@ -419,6 +429,10 @@ namespace GenericBot.CommandModules
                     .AddWarning(
                         $"Kicked {user} for `{reason}` (By `{context.Author}` At `{DateTime.UtcNow.ToString(@"yyyy-MM-dd HH:mm tt")} GMT`)");
                 Core.SaveUserToGuild(kickedUser, context.Guild.Id);
+
+                // Remove trusted role from rolestore, if present and zero-out points to prevent it being re-added.
+                kickedUser.RemoveStoredRole(guildconfig.TrustedRoleId);
+                kickedUser.Points = 0;
 
                 // Send the kick logs
                 await context.Channel.SendMessageAsync("", embed: builder.Build());
