@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using Discord;
 using Discord.WebSocket;
 using GenericBot.Entities;
@@ -13,11 +14,35 @@ namespace GenericBot
         public static async Task MessageRecieved(SocketMessage parameterMessage, bool edited = false)
         {
             Core.Messages++;
-            // Don't do stuff if the user is blacklisted
-            if (Core.CheckBlacklisted(parameterMessage.Author.Id))
-                return;
+    	       
+            var guildConfig = Core.GetGuildConfig(parameterMessage.GetGuild().Id);
+	    
             // Ignore self
             if (parameterMessage.Author.Id == Core.GetCurrentUserId())
+                return;
+	    
+	    if(guildConfig.WordBlacklistEnabled)
+	    {
+	    	//delete messages containing blacklisted words
+	    	try
+	    	{
+			var wordBlacklist = Core.GetWordBlacklist(parameterMessage.GetGuild().Id);
+			//remove non-alphanumeric characters and convert to lowercase before filtering
+			var messageWords = Regex.Replace(parameterMessage.Content.ToLower(), "[^\\w\\s\\-]", "").Trim().Split();
+		    	foreach(BlacklistedWord word in wordBlacklist)
+		    	{
+				if (messageWords.Contains(word.Word))
+				{
+					parameterMessage.DeleteAsync();
+					return;
+				}
+		    	}
+			
+	    	}
+		catch { }
+	    }
+	    // Don't do stuff if the user is blacklisted
+            if (Core.CheckBlacklisted(parameterMessage.Author.Id))
                 return;
 
             // Handle me saying "open an issue"
@@ -180,31 +205,52 @@ namespace GenericBot
 
             var guildConfig = Core.GetGuildConfig(arg2.GetGuild().Id);
 
-            if (guildConfig.LoggingChannelId == 0 || guildConfig.MessageLoggingIgnoreChannels.Contains(arg2.Channel.Id)
-                                                  || !arg1.HasValue) return;
+            if (guildConfig.LoggingChannelId != 0 && !guildConfig.MessageLoggingIgnoreChannels.Contains(arg2.Channel.Id)
+                                                  && arg1.HasValue)
+	    {
+            	EmbedBuilder log = new EmbedBuilder()
+                	.WithTitle("Message Edited")
+                	.WithColor(243, 110, 33)
+        	        .WithCurrentTimestamp();
+	
+           	 if (string.IsNullOrEmpty(arg2.Author.GetAvatarUrl()))
+           	 {
+           	     log = log.WithAuthor(new EmbedAuthorBuilder().WithName($"{arg2.Author} ({arg2.Author.Id})"));
+           	 }
+           	 else
+            	{
+                	log = log.WithAuthor(new EmbedAuthorBuilder().WithName($"{arg2.Author} ({arg2.Author.Id})")
+                	    .WithIconUrl(arg2.Author.GetAvatarUrl() + " "));
+            	}
 
-            EmbedBuilder log = new EmbedBuilder()
-                .WithTitle("Message Edited")
-                .WithColor(243, 110, 33)
-                .WithCurrentTimestamp();
+            	log.AddField(new EmbedFieldBuilder().WithName("Channel").WithValue("#" + arg2.Channel.Name).WithIsInline(true));
+            	log.AddField(new EmbedFieldBuilder().WithName("Sent At").WithValue(arg1.Value.Timestamp.ToString(@"yyyy-MM-dd HH:mm.ss") + "GMT").WithIsInline(true));
 
-            if (string.IsNullOrEmpty(arg2.Author.GetAvatarUrl()))
-            {
-                log = log.WithAuthor(new EmbedAuthorBuilder().WithName($"{arg2.Author} ({arg2.Author.Id})"));
-            }
-            else
-            {
-                log = log.WithAuthor(new EmbedAuthorBuilder().WithName($"{arg2.Author} ({arg2.Author.Id})")
-                    .WithIconUrl(arg2.Author.GetAvatarUrl() + " "));
-            }
+            	log.AddField(new EmbedFieldBuilder().WithName("Before").WithValue(arg1.Value.Content.SafeSubstring(1016)));
+            	log.AddField(new EmbedFieldBuilder().WithName("After").WithValue(arg2.Content.SafeSubstring(1016)));
 
-            log.AddField(new EmbedFieldBuilder().WithName("Channel").WithValue("#" + arg2.Channel.Name).WithIsInline(true));
-            log.AddField(new EmbedFieldBuilder().WithName("Sent At").WithValue(arg1.Value.Timestamp.ToString(@"yyyy-MM-dd HH:mm.ss") + "GMT").WithIsInline(true));
-
-            log.AddField(new EmbedFieldBuilder().WithName("Before").WithValue(arg1.Value.Content.SafeSubstring(1016)));
-            log.AddField(new EmbedFieldBuilder().WithName("After").WithValue(arg2.Content.SafeSubstring(1016)));
-
-            await arg2.GetGuild().GetTextChannel(guildConfig.LoggingChannelId).SendMessageAsync("", embed: log.Build());
+            	await arg2.GetGuild().GetTextChannel(guildConfig.LoggingChannelId).SendMessageAsync("", embed: log.Build());
+	    }
+	    if(guildConfig.WordBlacklistEnabled)
+	    {
+	    
+	    	//delete messages edited with blacklisted words (after logging the edit)
+	    	try
+	    	{
+			var wordBlacklist = Core.GetWordBlacklist(arg2.GetGuild().Id);
+			//remove non-alphanumeric characters and convert to lowercase before filtering
+			var messageWords = Regex.Replace(arg2.Content.ToLower(), "[^\\w\\s\\-]", "").Trim().Split();
+		   	foreach(BlacklistedWord word in wordBlacklist)
+		   	{
+				if (messageWords.Contains(word.Word))
+				{
+					arg2.DeleteAsync();
+					return;
+				}
+			}
+	    	}
+	    	catch { }
+	     }
         }
 
         public static async Task MessageDeleted(Cacheable<IMessage, ulong> arg, ISocketMessageChannel channel)

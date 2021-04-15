@@ -125,6 +125,29 @@ namespace GenericBot.Database
         /// <returns></returns>
         public List<Quote> GetAllQuotes(ulong guildId);
 
+        /// <summary>
+        /// Add a word to a guild's blacklist, without any deduplication
+        /// </summary>
+        /// <param name="word"></param>
+        /// <param name="guildId"></param>
+        /// <returns></returns>
+        public BlacklistedWord AddWordToBlacklist(string word, ulong guildId);
+
+        /// <summary>
+        /// Update a blacklisted word's field to be inactive, using the BlacklistedWord's Id field for identification
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="guildId"></param>
+        /// <returns></returns>
+        public bool RemoveWordFromBlacklist(int id, ulong guildId);
+
+        /// <summary>
+        /// Retrieve all blacklisted words from a guild's database
+        /// </summary>
+        /// <param name="guildId"></param>
+        /// <returns></returns>
+        public List<BlacklistedWord> GetWordBlacklist(ulong guildId);
+
         // TODO: use AuditCommand instead of ParsedCommand 
         /// <summary>
         /// Add a <see cref="ParsedCommand"/> to a guild's database, without any deduplication
