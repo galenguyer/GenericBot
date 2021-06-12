@@ -81,28 +81,42 @@ namespace GenericBot.Entities
 
         public PermissionLevels GetPermissions(ParsedCommand context)
         {
-            if (context.Channel is SocketDMChannel)
-                return PermissionLevels.Admin;
-            else if (context.Author.Id.Equals(Core.GetOwnerId()))
-                return PermissionLevels.BotOwner;
-            else if (Core.CheckGlobalAdmin(context.Author.Id))
-                return PermissionLevels.GlobalAdmin;
-            else if(IsGuildAdmin(context.Author, context.Guild.Id))
-                return PermissionLevels.GuildOwner;
-            else if (((SocketGuildUser)context.Author).Roles.Select(r => r.Id).Intersect(Core.GetGuildConfig(context.Guild.Id).AdminRoleIds).Any())
-                return PermissionLevels.Admin;
-            else if (((SocketGuildUser)context.Author).Roles.Select(r => r.Id).Intersect(Core.GetGuildConfig(context.Guild.Id).ModRoleIds).Any())
-                return PermissionLevels.Moderator;
-            else return PermissionLevels.User;
+            try {
+                if (context.Channel is SocketDMChannel)
+                    return PermissionLevels.User;
+                else if (context.Author.Id.Equals(Core.GetOwnerId()))
+                    return PermissionLevels.BotOwner;
+                else if (Core.CheckGlobalAdmin(context.Author.Id))
+                    return PermissionLevels.GlobalAdmin;
+                else if(IsGuildAdmin(context.Author, context.Guild.Id))
+                    return PermissionLevels.GuildOwner;
+                else if (((SocketGuildUser)context.Author).Roles.Select(r => r.Id).Intersect(Core.GetGuildConfig(context.Guild.Id).AdminRoleIds).Any())
+                    return PermissionLevels.Admin;
+                else if (((SocketGuildUser)context.Author).Roles.Select(r => r.Id).Intersect(Core.GetGuildConfig(context.Guild.Id).ModRoleIds).Any())
+                    return PermissionLevels.Moderator;
+                else
+	            return PermissionLevels.User;
+            }
+            catch (Exception exep) {
+	        Console.WriteLine(exep);
+                return PermissionLevels.User;
+            }
         }
         private bool IsGuildAdmin(SocketUser user, ulong guildId)
         {
-            var guild = Core.GetGuid(guildId);
-            if (guild.Owner.Id == user.Id)
-                return true;
-            else if (guild.GetUser(user.Id).Roles.Any(r => r.Permissions.Administrator))
-                return true;
-            return false;
+            try
+            {
+                var guild = Core.GetGuid(guildId);
+                if (guild.Owner.Id == user.Id)
+                    return true;
+                else if (guild.GetUser(user.Id).Roles.Any(r => r.Permissions.Administrator))
+                    return true;
+                return false;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public ParsedCommand ParseMessage(SocketMessage msg)
