@@ -17,7 +17,7 @@ GenericBot provides a wide range of tools for moderators to track users and infr
 In addition to being a highly effective moderator toolkit, GenericBot has some fun commands, such as >dog, >cat, or >jeff. You can also create your own custom commands for rapid-fire memery or whatever else tickles your fancy
 
 ### Development 
-GenericBot is constantly in active development. 
+~~GenericBot is constantly in active development.~~ GenericBot gets patches if something blows up badly but that's about it. I'm thinking of a re-write though
 
 #### Issue Tracking
 If you notice a bug or want a feature added, open an [issue!](https://github.com/MasterChief-John-117/GenericBot/issues) I'll get to it as soon as I can. 
