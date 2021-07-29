@@ -773,7 +773,7 @@ namespace GenericBot.CommandModules
                     try
                     {
                         File.WriteAllText($"{guildid}-customCommands.json", JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
-                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
+                        //Console.WriteLine(JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
                     {
@@ -785,7 +785,7 @@ namespace GenericBot.CommandModules
                     try
                     {
                         File.WriteAllText($"{guildid}-bans.json", JsonConvert.SerializeObject(Core.GetBansFromGuild(ulong.Parse(guildid)), Formatting.Indented));
-                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetBansFromGuild(ulong.Parse(guildid)), Formatting.Indented));
+                        //Console.WriteLine(JsonConvert.SerializeObject(Core.GetBansFromGuild(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
                     {
@@ -797,7 +797,7 @@ namespace GenericBot.CommandModules
                     try
                     {
                         File.WriteAllText($"{guildid}-users.json", JsonConvert.SerializeObject(Core.GetAllUsers(ulong.Parse(guildid)), Formatting.Indented));
-                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetAllUsers(ulong.Parse(guildid)), Formatting.Indented));
+                        //Console.WriteLine(JsonConvert.SerializeObject(Core.GetAllUsers(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
                     {
@@ -809,7 +809,7 @@ namespace GenericBot.CommandModules
                     try
                     {
                         File.WriteAllText($"{guildid}-quotes.json", JsonConvert.SerializeObject(Core.GetAllQuotes(ulong.Parse(guildid)), Formatting.Indented));
-                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetAllQuotes(ulong.Parse(guildid)), Formatting.Indented));
+                        //Console.WriteLine(JsonConvert.SerializeObject(Core.GetAllQuotes(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
                     {
@@ -821,7 +821,7 @@ namespace GenericBot.CommandModules
                     try
                     {
                         File.WriteAllText($"{guildid}-giveaways.json", JsonConvert.SerializeObject(Core.GetGiveaways(ulong.Parse(guildid)), Formatting.Indented));
-                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetGiveaways(ulong.Parse(guildid)), Formatting.Indented));
+                        //Console.WriteLine(JsonConvert.SerializeObject(Core.GetGiveaways(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
                     {
