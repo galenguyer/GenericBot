@@ -767,12 +767,13 @@ namespace GenericBot.CommandModules
             dumpdb.RequiredPermission = Command.PermissionLevels.BotOwner;
             dumpdb.ToExecute += async (context) =>
             {
+                File.WriteAllText("dump/guilds.json", JsonConvert.SerializeObject((Core.DatabaseEngine as MongoEngine).GetGuildIdsFromDb(), Formatting.Indented));
                 foreach(var guildid in (Core.DatabaseEngine as MongoEngine).GetGuildIdsFromDb())
                 {
                     // CustomCommands
                     try
                     {
-                        File.WriteAllText($"{guildid}-customCommands.json", JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
+                        File.WriteAllText($"dump/{guildid}-customCommands.json", JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
                         //Console.WriteLine(JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
@@ -781,10 +782,22 @@ namespace GenericBot.CommandModules
                         System.Threading.Thread.Sleep(1);
                     }
                     Console.WriteLine("Dumped CustomCommands");
+                    // Config
+                    try
+                    {
+                        File.WriteAllText($"dump/{guildid}-config.json", JsonConvert.SerializeObject(Core.GetGuildConfig(ulong.Parse(guildid)), Formatting.Indented));
+                        //Console.WriteLine(JsonConvert.SerializeObject(Core.GetGuildConfig(ulong.Parse(guildid)), Formatting.Indented));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception {ex.Message} occured dumping config for {guildid}\n{ex.StackTrace}");
+                        System.Threading.Thread.Sleep(1);
+                    }
+                    Console.WriteLine("Dumped config");
                     // Bans
                     try
                     {
-                        File.WriteAllText($"{guildid}-bans.json", JsonConvert.SerializeObject(Core.GetBansFromGuild(ulong.Parse(guildid)), Formatting.Indented));
+                        File.WriteAllText($"dump/ {guildid}-bans.json", JsonConvert.SerializeObject(Core.GetBansFromGuild(ulong.Parse(guildid)), Formatting.Indented));
                         //Console.WriteLine(JsonConvert.SerializeObject(Core.GetBansFromGuild(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
@@ -796,7 +809,7 @@ namespace GenericBot.CommandModules
                     // Users
                     try
                     {
-                        File.WriteAllText($"{guildid}-users.json", JsonConvert.SerializeObject(Core.GetAllUsers(ulong.Parse(guildid)), Formatting.Indented));
+                        File.WriteAllText($"dump/{guildid}-users.json", JsonConvert.SerializeObject(Core.GetAllUsers(ulong.Parse(guildid)), Formatting.Indented));
                         //Console.WriteLine(JsonConvert.SerializeObject(Core.GetAllUsers(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
@@ -808,7 +821,7 @@ namespace GenericBot.CommandModules
                     // Quotes
                     try
                     {
-                        File.WriteAllText($"{guildid}-quotes.json", JsonConvert.SerializeObject(Core.GetAllQuotes(ulong.Parse(guildid)), Formatting.Indented));
+                        File.WriteAllText($"dunp/{guildid}-quotes.json", JsonConvert.SerializeObject(Core.GetAllQuotes(ulong.Parse(guildid)), Formatting.Indented));
                         //Console.WriteLine(JsonConvert.SerializeObject(Core.GetAllQuotes(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
@@ -820,7 +833,7 @@ namespace GenericBot.CommandModules
                     // Giveaways
                     try
                     {
-                        File.WriteAllText($"{guildid}-giveaways.json", JsonConvert.SerializeObject(Core.GetGiveaways(ulong.Parse(guildid)), Formatting.Indented));
+                        File.WriteAllText($"dump/{guildid}-giveaways.json", JsonConvert.SerializeObject(Core.GetGiveaways(ulong.Parse(guildid)), Formatting.Indented));
                         //Console.WriteLine(JsonConvert.SerializeObject(Core.GetGiveaways(ulong.Parse(guildid)), Formatting.Indented));
                     }
                     catch (Exception ex)
