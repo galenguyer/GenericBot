@@ -14,7 +14,7 @@ namespace GenericBot.Database
     /// all methods correctly and consistently. All database access should be through the static Core class
     /// to allow for caching and any other sanity checks.
     /// </summary>
-    interface IDatabaseEngine
+    public interface IDatabaseEngine
     {
         /// <summary>
         /// Return the <see cref="GuildConfig"/> for a guild as specified by the <paramref name="guildId"/>, 

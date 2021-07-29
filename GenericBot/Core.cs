@@ -27,7 +27,7 @@ namespace GenericBot
         public static Dictionary<ulong, List<CustomCommand>> CustomCommands;
         public static int Messages { get; set; }
         public static Logger Logger { get; private set; }
-        private static IDatabaseEngine DatabaseEngine { get; set; }
+        public static IDatabaseEngine DatabaseEngine { get; set; }
 
         private static List<GuildConfig> LoadedGuildConfigs;
 

@@ -1,8 +1,10 @@
 ﻿using Discord;
+using GenericBot.Database;
 using GenericBot.Entities;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -760,6 +762,20 @@ namespace GenericBot.CommandModules
                 }
             };
             commands.Add(runas);
+
+            Command dumpdb = new Command("dumpdb");
+            dumpdb.RequiredPermission = Command.PermissionLevels.BotOwner;
+            dumpdb.ToExecute += async (context) =>
+            {
+                foreach(var guildid in (Core.DatabaseEngine as MongoEngine).GetGuildIdsFromDb())
+                {
+                    File.WriteAllText($"{guildid}-customCommands.json", JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
+                    Console.WriteLine(JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
+                }
+                Console.WriteLine("Dumped CustomCommands");
+                await context.Message.ReplyAsync("Done!");
+            };
+            commands.Add(dumpdb);
 
             return commands;
         }
