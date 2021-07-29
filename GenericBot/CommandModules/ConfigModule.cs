@@ -769,6 +769,7 @@ namespace GenericBot.CommandModules
             {
                 foreach(var guildid in (Core.DatabaseEngine as MongoEngine).GetGuildIdsFromDb())
                 {
+                    // CustomCommands
                     try
                     {
                         File.WriteAllText($"{guildid}-customCommands.json", JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
@@ -776,11 +777,59 @@ namespace GenericBot.CommandModules
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Exception {ex.Message} occured dumping database for {guildid}\n{ex.StackTrace}");
+                        Console.WriteLine($"Exception {ex.Message} occured dumping customCommands for {guildid}\n{ex.StackTrace}");
                         System.Threading.Thread.Sleep(1);
                     }
+                    Console.WriteLine("Dumped CustomCommands");
+                    // Bans
+                    try
+                    {
+                        File.WriteAllText($"{guildid}-bans.json", JsonConvert.SerializeObject(Core.GetBansFromGuild(ulong.Parse(guildid)), Formatting.Indented));
+                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetBansFromGuild(ulong.Parse(guildid)), Formatting.Indented));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception {ex.Message} occured dumping bans for {guildid}\n{ex.StackTrace}");
+                        System.Threading.Thread.Sleep(1);
+                    }
+                    Console.WriteLine("Dumped bans");
+                    // Users
+                    try
+                    {
+                        File.WriteAllText($"{guildid}-users.json", JsonConvert.SerializeObject(Core.GetAllUsers(ulong.Parse(guildid)), Formatting.Indented));
+                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetAllUsers(ulong.Parse(guildid)), Formatting.Indented));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception {ex.Message} occured dumping users for {guildid}\n{ex.StackTrace}");
+                        System.Threading.Thread.Sleep(1);
+                    }
+                    Console.WriteLine("Dumped users");
+                    // Quotes
+                    try
+                    {
+                        File.WriteAllText($"{guildid}-quotes.json", JsonConvert.SerializeObject(Core.GetAllQuotes(ulong.Parse(guildid)), Formatting.Indented));
+                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetAllQuotes(ulong.Parse(guildid)), Formatting.Indented));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception {ex.Message} occured dumping quotes for {guildid}\n{ex.StackTrace}");
+                        System.Threading.Thread.Sleep(1);
+                    }
+                    Console.WriteLine("Dumped quotes");
+                    // Giveaways
+                    try
+                    {
+                        File.WriteAllText($"{guildid}-giveaways.json", JsonConvert.SerializeObject(Core.GetGiveaways(ulong.Parse(guildid)), Formatting.Indented));
+                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetGiveaways(ulong.Parse(guildid)), Formatting.Indented));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception {ex.Message} occured dumping giveaways for {guildid}\n{ex.StackTrace}");
+                        System.Threading.Thread.Sleep(1);
+                    }
+                    Console.WriteLine("Dumped quotes");
                 }
-                Console.WriteLine("Dumped CustomCommands");
                 await context.Message.ReplyAsync("Done!");
             };
             commands.Add(dumpdb);
