@@ -769,8 +769,16 @@ namespace GenericBot.CommandModules
             {
                 foreach(var guildid in (Core.DatabaseEngine as MongoEngine).GetGuildIdsFromDb())
                 {
-                    File.WriteAllText($"{guildid}-customCommands.json", JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
-                    Console.WriteLine(JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
+                    try
+                    {
+                        File.WriteAllText($"{guildid}-customCommands.json", JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
+                        Console.WriteLine(JsonConvert.SerializeObject(Core.GetCustomCommands(ulong.Parse(guildid)), Formatting.Indented));
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Exception {ex.Message} occured dumping database for {guildid}\n{ex.StackTrace}");
+                        System.Threading.Thread.Sleep(1);
+                    }
                 }
                 Console.WriteLine("Dumped CustomCommands");
                 await context.Message.ReplyAsync("Done!");
