@@ -108,7 +108,7 @@ namespace GenericBot
             Commands.AddRange(new RoleModule().Load());
             Commands.AddRange(new SocialModule().Load());
             Commands.AddRange(new WarningModule().Load());
-
+	    Commands.AddRange(new WordBlacklistModule().Load());
             if (CommandsToExclude == null)
                 return;
             Commands = Commands.Where(c => !CommandsToExclude.Contains(c.Name)).ToList();
@@ -248,6 +248,11 @@ namespace GenericBot
             DatabaseEngine.AddQuote(quote, guildId);
         public static bool RemoveQuote(int id, ulong guildId) =>
             DatabaseEngine.RemoveQuote(id, guildId);
+        
+	public static BlacklistedWord AddWordToBlacklist(string word, ulong guildId) =>
+            DatabaseEngine.AddWordToBlacklist(word, guildId);
+        public static bool RemoveWordFromBlacklist(int id, ulong guildId) =>
+            DatabaseEngine.RemoveWordFromBlacklist(id, guildId);
 
         /// <summary>
         /// Retrieve a quote from the database. 
@@ -334,6 +339,14 @@ namespace GenericBot
             DatabaseEngine.GetAllQuotes(guildId);
 
         /// <summary>
+        /// Get word blacklist from the database for a guild
+        /// </summary>
+        /// <param name="guildId"></param>
+        /// <returns></returns>
+        public static List<BlacklistedWord> GetWordBlacklist(ulong guildId) =>
+            DatabaseEngine.GetWordBlacklist(guildId);
+        
+	/// <summary>
         /// Add or update an ExceptionReport to the database, and open an issue on GitHub if possible
         /// </summary>
         /// <param name="report"></param>

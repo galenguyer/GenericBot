@@ -43,6 +43,7 @@ namespace GenericBot.Entities
         public bool PointsEnabled { get; set; }
         public ulong TrustedRoleId { get; set; }
         public ulong TrustedRolePointThreshold { get; set; }
+	public bool WordBlacklistEnabled { get; set; }
 
         public GuildConfig(ulong id)
         {
@@ -58,6 +59,7 @@ namespace GenericBot.Entities
             PointsEnabled = false;
             TrustedRoleId = 0;
             TrustedRolePointThreshold = 0;
+	    WordBlacklistEnabled = false;
         }
     }
 

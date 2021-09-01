@@ -179,7 +179,7 @@ namespace GenericBot.Database
             _collection.InsertOne(q);
 
             return q;
-        }
+	}
 
         ///<inheritdoc cref="IDatabaseEngine.RemoveQuote(int, ulong)"/>
         public bool RemoveQuote(int id, ulong guildId)
@@ -208,6 +208,54 @@ namespace GenericBot.Database
 
             var _userDb = GetDatabaseFromGuildId(guildId);
             var _collection = _userDb.GetCollection<Quote>("quotes");
+
+            return _collection.Find(new BsonDocument("Active", true)).ToList();
+        }
+
+
+        public BlacklistedWord AddWordToBlacklist(string word, ulong guildId)
+        {
+            Core.Logger.LogGenericMessage($"[Mongo] SAVED Blacklisted Word TO {guildId}");
+
+            var _userDb = GetDatabaseFromGuildId(guildId);
+            var _collection = _userDb.GetCollection<BlacklistedWord>("blacklistedwords");
+
+            var w = new BlacklistedWord
+            {
+                Word = word,
+                Id = _collection.CountDocuments(new BsonDocument()) == 0 ? 1 : (int)_collection.CountDocuments(new BsonDocument()) + 1,
+                Active = true
+            };
+            _collection.InsertOne(w);
+
+            return w;
+	}
+
+        public bool RemoveWordFromBlacklist(int id, ulong guildId)
+        {
+            Core.Logger.LogGenericMessage($"[Mongo] DELETE Blacklisted Word {id} FROM {guildId}");
+
+            var _userDb = GetDatabaseFromGuildId(guildId);
+            var _collection = _userDb.GetCollection<BlacklistedWord>("blacklistedwords");
+
+            try
+            {
+                _collection.UpdateOne(new BsonDocument("_id", id), Builders<BlacklistedWord>.Update.Set("Active", false));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Core.Logger.LogErrorMessage(ex, null);
+                return false;
+            }
+        }
+
+        public List<BlacklistedWord> GetWordBlacklist(ulong guildId)
+        {
+            Core.Logger.LogGenericMessage($"[Mongo] GOT Word Blacklist FROM {guildId}");
+
+            var _userDb = GetDatabaseFromGuildId(guildId);
+            var _collection = _userDb.GetCollection<BlacklistedWord>("blacklistedwords");
 
             return _collection.Find(new BsonDocument("Active", true)).ToList();
         }
